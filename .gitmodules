@@ -1,0 +1,3 @@
+[submodule "VSU-Schedule-DB"]
+	path = VSU-Schedule-DB
+	url = git@github.com:Chisto-Poroflit/VSU-Schedule-DB.git
