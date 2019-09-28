@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using VSU_Schedule.Areas.Identity;
 
 namespace VSU_Schedule
 {
@@ -20,5 +21,5 @@ namespace VSU_Schedule
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
-    }
+        }
 }

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSU-Schedule", "VSU-Schedule\VSU-Schedule.csproj", "{FDF6399A-794C-48F5-81C0-CEEF9944140E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSU-Schedule", "VSU-Schedule\VSU-Schedule.csproj", "{FDF6399A-794C-48F5-81C0-CEEF9944140E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbLibrary", "..\VSU-Schedule-DB\SichCreateDB\DbLibrary\DbLibrary.csproj", "{2BBFED4C-A0F4-43C5-B4A2-515698890407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FDF6399A-794C-48F5-81C0-CEEF9944140E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDF6399A-794C-48F5-81C0-CEEF9944140E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDF6399A-794C-48F5-81C0-CEEF9944140E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BBFED4C-A0F4-43C5-B4A2-515698890407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BBFED4C-A0F4-43C5-B4A2-515698890407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BBFED4C-A0F4-43C5-B4A2-515698890407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BBFED4C-A0F4-43C5-B4A2-515698890407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
