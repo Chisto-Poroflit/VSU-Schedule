@@ -1,0 +1,53 @@
+﻿@page
+@model VSU_Schedule.Areas.Rooms.Pages.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить аудиторию";
+}
+
+<h3>Вы уверены в том, что хотите удалить аудиторию @Model.Room.Number?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.Capacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.Capacity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.IsLecture)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.IsLecture)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.IsPractice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.IsPractice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.IsLaboratory)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.IsLaboratory)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.IsSpecial)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.IsSpecial)
+        </dd>
+    </dl>
+
+    <form method="post">
+        <input type="hidden" asp-for="Room.Number" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+    </form>
+    <br />
+    <div>
+        <a asp-page="./Index">Назад к списку</a>
+    </div>
+</div>
+
