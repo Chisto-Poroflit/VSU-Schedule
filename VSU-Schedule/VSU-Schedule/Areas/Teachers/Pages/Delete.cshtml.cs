@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DbLibrary;
 using DbLibrary.Models.Entity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VSU_Schedule.Areas.Teachers.Pages
 {
+    [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;

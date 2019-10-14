@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DbLibrary;
 using DbLibrary.Models.Entity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VSU_Schedule.Areas.Rooms.Pages
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;

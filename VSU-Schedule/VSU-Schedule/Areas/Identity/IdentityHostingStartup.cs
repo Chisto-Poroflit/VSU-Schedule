@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -21,9 +22,33 @@ namespace VSU_Schedule.Areas.Identity
                         context.Configuration.GetConnectionString("VSU_ScheduleUserContextConnection")));
 
                 services.AddDefaultIdentity<VSU_ScheduleUser>()
+                    .AddRoles<IdentityRole>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<VSU_ScheduleUserContext>();
+                
             });
         }
+
+        private void AddToRoles(UserManager<VSU_ScheduleUser> userManager)
+        {
+            var adminUser = userManager.FindByNameAsync("Admin").Result;
+
+            if (adminUser == null)
+            {
+                var administrator = new VSU_ScheduleUser()
+                {
+                    Email = "admin@admin.ru",
+                    UserName = "Admin",
+                };
+
+                var newUser = userManager.CreateAsync(administrator, "P@ssword123").Result;
+                if (newUser.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Admin");
+                    newUserRole.Wait();
+                }
+            }
+        }
+
     }
 }

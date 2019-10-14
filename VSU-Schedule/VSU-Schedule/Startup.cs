@@ -67,5 +67,7 @@ namespace VSU_Schedule
 
             app.UseMvc();
         }
+
+        
     }
 }

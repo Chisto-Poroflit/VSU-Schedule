@@ -13,8 +13,8 @@ namespace VSU_Schedule.Areas.Identity.Data.Config
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
             builder.HasData(new[] {
-                new IdentityRole("Admin"),
-                new IdentityRole("User")
+                new IdentityRole("Admin"){NormalizedName = "ADMIN"},
+                new IdentityRole("User"){NormalizedName = "USER"}
             });
         }
     }
