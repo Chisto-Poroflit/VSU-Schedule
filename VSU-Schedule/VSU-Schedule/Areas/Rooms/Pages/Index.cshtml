@@ -3,7 +3,7 @@
 @{ 
     ViewData["Title"] = "Аудитории";
 }
-
+    <h4>Аудитории</h4>
 <p>
     <a asp-page="Create">Добавить новую</a>
 </p>
@@ -35,7 +35,9 @@
 @foreach (var item in Model.Room) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Number)
+                <a asp-page="./Details" asp-route-id="@item.Number">
+                    @Html.DisplayFor(modelItem => item.Number)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Capacity)
@@ -54,7 +56,6 @@
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Number">Редактировать</a> |
-                <a asp-page="./Details" asp-route-id="@item.Number">Инфо</a> |
                 <a asp-page="./Delete" asp-route-id="@item.Number">Удалить</a>
             </td>
         </tr>

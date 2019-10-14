@@ -5,10 +5,7 @@
     ViewData["Title"] = "Create";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-
-<h1>Create</h1>
-
-<h4>Teacher</h4>
+<h4>Добавление преподавателя</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -25,14 +22,14 @@
                 <span asp-validation-for="Teacher.Position" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Добавить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index">Назад к списку</a>
 </div>
 
 @section Scripts {

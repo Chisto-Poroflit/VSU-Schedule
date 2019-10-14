@@ -4,16 +4,13 @@
 @{
     ViewData["Title"] = "Группы";
 }
-
+<h4>Группы</h4>
 <p>
     <a asp-page="Create">Добавить новую</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Groups[0].Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Groups[0].SemesterNumber)
             </th>
@@ -33,9 +30,6 @@
         @foreach (var item in Model.Groups)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SemesterNumber)
                 </td>

@@ -6,10 +6,9 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h4>@Model.Teacher.FullName</h4>
 
 <div>
-    <h4>Teacher</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -27,6 +26,6 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Teacher.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Edit" asp-route-id="@Model.Teacher.Id">Редактировать</a> |
+    <a asp-page="./Index">Назад к списку</a>
 </div>

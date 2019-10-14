@@ -3,16 +3,13 @@
 @{
     ViewData["Title"] = "Предметы";
 }
-
+<h4>Предметы</h4>
 <p>
-    <a asp-page="Create">Добавить новую</a>
+    <a asp-page="Create">Добавить новый</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject[0].Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Subject[0].Name)
             </th>
@@ -27,17 +24,15 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-page="./Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Semester)
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Инфо</a> |
                     <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
                 </td>
             </tr>

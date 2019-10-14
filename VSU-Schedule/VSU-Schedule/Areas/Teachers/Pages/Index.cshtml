@@ -6,38 +6,40 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h4>Преподаватели</h4>
 
 <p>
-    <a asp-page="/Create">Create New</a>
+    <a asp-page="/Create">Добавить</a>
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher[0].Position)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Teacher[0].FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Teacher[0].Position)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Teacher) {
+    @foreach (var item in Model.Teacher)
+    {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FullName)
+                <a asp-page="./Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Position)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
