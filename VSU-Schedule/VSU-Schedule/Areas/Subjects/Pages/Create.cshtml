@@ -1,0 +1,37 @@
+﻿@page
+@model VSU_Schedule.Areas.Subjects.Pages.CreateModel
+@{
+     ViewData["Title"] = "Добавить предмет";
+}
+
+<h4>Новый предмет</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Subject.Name" class="control-label"></label>
+                <input asp-for="Subject.Name" class="form-control" />
+                <span asp-validation-for="Subject.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.Semester" class="control-label"></label>
+                <input asp-for="Subject.Semester" class="form-control" />
+                <span asp-validation-for="Subject.Semester" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

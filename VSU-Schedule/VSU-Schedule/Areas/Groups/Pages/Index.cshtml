@@ -1,0 +1,59 @@
+﻿@page
+@model VSU_Schedule.Areas.Groups.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Группы";
+}
+
+<p>
+    <a asp-page="Create">Добавить новую</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].SemesterNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].GroupNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].SubgroupNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].Specialization.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Groups)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SemesterNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubgroupNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Specialization.Name)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Инфо</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

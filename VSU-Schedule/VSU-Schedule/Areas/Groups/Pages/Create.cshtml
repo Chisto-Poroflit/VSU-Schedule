@@ -1,0 +1,48 @@
+﻿@page
+@model VSU_Schedule.Areas.Groups.Pages.CreateModel
+
+@{
+    ViewData["Title"] = "Добавить группу";
+}
+
+<h4>Новая группа</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Group.SemesterNumber" class="control-label"></label>
+                <input asp-for="Group.SemesterNumber" class="form-control" />
+                <span asp-validation-for="Group.SemesterNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Group.GroupNumber" class="control-label"></label>
+                <input asp-for="Group.GroupNumber" class="form-control" />
+                <span asp-validation-for="Group.GroupNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Group.SubgroupNumber" class="control-label"></label>
+                <input asp-for="Group.SubgroupNumber" class="form-control" />
+                <span asp-validation-for="Group.SubgroupNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Group.Specialization" class="control-label"></label>               
+                @Html.DropDownListFor(model => model.Group.SpecializatioId,
+                                     new SelectList(Model.Specializations,"Id","Name"))
+                <span asp-validation-for="Group.Specialization" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

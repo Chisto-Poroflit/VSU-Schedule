@@ -9,8 +9,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\VSU-Schedule-DB\SichCreateDB\DbLibrary\DbLibrary.csproj" />
-  </ItemGroup>
-
 </Project>

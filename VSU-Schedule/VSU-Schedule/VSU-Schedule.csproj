@@ -16,7 +16,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VSU-Schedule-DB\SichCreateDB\DbLibrary\DbLibrary.csproj" />
+    <ProjectReference Include="..\DbLibrary\DbLibrary.csproj" />
   </ItemGroup>
 
 </Project>
