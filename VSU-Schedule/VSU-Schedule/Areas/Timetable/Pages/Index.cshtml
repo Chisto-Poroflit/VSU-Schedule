@@ -4,27 +4,46 @@
 @{
     ViewData["Title"] = "Расписание";
     var rowSpan = Model.Para.Count + 1;
+    bool activeSemesterTab = true;
+    bool activeSemesterPage = true;
 }
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th scope="col" colspan="2" rowspan="2"></th>
-                @foreach (var group in Model.Groups.OrderBy(g=>g.GroupNumber).GroupBy(g=>g.GroupNumber))
-                {
-                    var subgroupsCount = group.Count();
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterTab ? "active" : "";
+        
+        <li class="nav-item">
+            <a class="nav-link @active" id="@semGroups.Key-tab" data-toggle="tab" href="#sem-@semGroups.Key" role="tab" aria-controls="@semGroups.Key" aria-selected="@activeSemesterTab">@semGroups.Key семестр</a>
+        </li>
+        activeSemesterTab = false;
+    }
+</ul>
+<div class="tab-content" id="myTabContent">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterPage ? "show active" : "";
+        activeSemesterPage = false;
+        <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col" colspan="2" rowspan="2"></th>
+                    @foreach (var group in semGroups.OrderBy(g=>g.GroupNumber).GroupBy(g=>g.GroupNumber))
+                    {
+                        var subgroupsCount = group.Count();
 
-                    <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
-                }
-            </tr>
-            <tr>
+                        <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
+                    }
+                </tr>
+                <tr>
                 
-                @foreach (var group in Model.Groups.OrderBy(g => g.GroupNumber).ThenBy(g=>g.SubgroupNumber))
-                {
-                    <th scope="col" class="text-center">@group.SubgroupNumber</th>
-                }
-            </tr>
-            </thead>
-            <tbody>
+                    @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).ThenBy(g=>g.SubgroupNumber))
+                    {
+                        <th scope="col" class="text-center">@group.SubgroupNumber</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
 
                 @for (int day = 1; day <= 6; day++)
                 {
@@ -35,16 +54,20 @@
                     {
                         <tr>
                             <td>@para.StartTime - @para.EndTime</td>
-                            @foreach (var group in Model.Groups)
+                            @foreach (var group in semGroups)
                             {
                                 <td></td>
                             }
                         </tr>
                     }
                 }
-            </tbody>
-        </table>
-        <table class="table">
-            <tbody>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+        
