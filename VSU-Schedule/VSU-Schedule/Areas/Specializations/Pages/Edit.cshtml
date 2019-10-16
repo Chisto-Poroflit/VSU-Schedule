@@ -3,6 +3,12 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var specList = new List<SelectListItem>
+{
+        new SelectListItem() { Value = "", Text = "No value", Selected = true}
+    };
+    specList.AddRange(Model.Specializations.Select(x => new SelectListItem(x.Name, x.Id.ToString())));
+
 }
 
 <h1>Edit</h1>
@@ -20,11 +26,11 @@
                 <span asp-validation-for="Specialization.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Specialization.ParentSpec.Name" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Specialization.ParentSpec,
-                                     new SelectList(Model.Specializations, "Id", "Name").ToList().Insert(0,new SelectListItem() { Value = null, Text = "-"}),
-                                     new { @class = "form-control" })
-                <span asp-validation-for="Specialization.ParentSpec.Name" class="text-danger"></span>
+                <label asp-for="Specialization.ParentSpec" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Specialization.ParentSpecId,
+                                        specList,
+                                        new { @class = "form-control" })
+                <span asp-validation-for="Specialization.ParentSpecId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

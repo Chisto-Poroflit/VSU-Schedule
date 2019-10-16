@@ -47,8 +47,26 @@ namespace VSU_Schedule.Areas.Specializations.Pages
             {
                 return Page();
             }
+            //var parentSpec = await _context.Specializations.FirstOrDefaultAsync(x => x.Id == Specialization.ParentSpec.Id);
+            //Specialization.ParentSpec = parentSpec;
 
-            _context.Attach(Specialization).State = EntityState.Modified;
+            var local = _context.Set<Specialization>()
+    .Local
+    .FirstOrDefault(entry => entry.Id.Equals(Specialization.Id));
+
+            // check if local is not null 
+            if (local!=null) // I'm using a extension method
+            {
+                // detach
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            // set Modified flag in your entry
+            _context.Entry(Specialization).State = EntityState.Modified;
+
+            // save 
+            _context.SaveChanges();
+
+            //_context.Attach(Specialization).State = EntityState.Modified;
 
             try
             {
