@@ -1,0 +1,48 @@
+﻿@page
+@model VSU_Schedule.Areas.Specializations.Pages.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    var specList = new List<SelectListItem>
+{
+        new SelectListItem() { Value = "", Text = "No value", Selected = true}
+    };
+    specList.AddRange(Model.Specializations.Select(x => new SelectListItem(x.Name, x.Id.ToString())));
+
+}
+
+<h1>Edit</h1>
+
+<h4>Specialization</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Specialization.Id" />
+            <div class="form-group">
+                <label asp-for="Specialization.Name" class="control-label"></label>
+                <input asp-for="Specialization.Name" class="form-control" />
+                <span asp-validation-for="Specialization.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Specialization.ParentSpec" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Specialization.ParentSpecId,
+                                        specList,
+                                        new { @class = "form-control" })
+                <span asp-validation-for="Specialization.ParentSpecId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

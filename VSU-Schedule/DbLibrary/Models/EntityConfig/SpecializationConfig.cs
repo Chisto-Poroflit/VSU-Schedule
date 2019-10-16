@@ -15,6 +15,7 @@ namespace DbLibrary.Models.EntityConfig
                 .HasMaxLength(500);
             builder.HasOne(s => s.ParentSpec)
                 .WithMany(s => s.ChildSpecializations)
+                .HasForeignKey(s=>s.ParentSpecId)
                 .OnDelete(DeleteBehavior.Restrict);
             builder.HasData(
                 new Specialization[]

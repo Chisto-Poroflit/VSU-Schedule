@@ -10,10 +10,11 @@ namespace DbLibrary.Models.Entity
         [Display(Name = "Специальность")]
         public string Name { get; set; }
 
-      //  public int ParentSpecId { get; set; }
+        public int? ParentSpecId { get; set; }
 
-        public List<Specialization> ChildSpecializations { get; set; } 
+        public List<Specialization> ChildSpecializations { get; set; }
 
+        [Display(Name = "Родительская специальность")]
         public Specialization ParentSpec { get; set; }
 
         public List<Group> Group { get; set; }
