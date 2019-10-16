@@ -1,0 +1,50 @@
+﻿@page
+@using System.Globalization
+@model VSU_Schedule.Areas.Timetable.Pages.IndexModel
+@{
+    ViewData["Title"] = "Расписание";
+    var rowSpan = Model.Para.Count + 1;
+}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col" colspan="2" rowspan="2"></th>
+                @foreach (var group in Model.Groups.OrderBy(g=>g.GroupNumber).GroupBy(g=>g.GroupNumber))
+                {
+                    var subgroupsCount = group.Count();
+
+                    <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
+                }
+            </tr>
+            <tr>
+                
+                @foreach (var group in Model.Groups.OrderBy(g => g.GroupNumber).ThenBy(g=>g.SubgroupNumber))
+                {
+                    <th scope="col" class="text-center">@group.SubgroupNumber</th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+
+                @for (int day = 1; day <= 6; day++)
+                {
+                    <tr>
+                        <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
+                    </tr>
+                    foreach (var para in Model.Para)
+                    {
+                        <tr>
+                            <td>@para.StartTime - @para.EndTime</td>
+                            @foreach (var group in Model.Groups)
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <table class="table">
+            <tbody>
+            </tbody>
+        </table>
