@@ -15,6 +15,7 @@ namespace DbLibrary
         {
             Database.EnsureCreated();
         }
+        public DbSet<TeacherSubject> TeacherSubject { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
@@ -35,6 +36,7 @@ namespace DbLibrary
             modelBuilder.ApplyConfiguration(new SubjConfig());
             modelBuilder.ApplyConfiguration(new RoomConfig());
             modelBuilder.ApplyConfiguration(new TeacherConfig());
+            modelBuilder.ApplyConfiguration(new TeacherSubjectConfig());
             modelBuilder.ApplyConfiguration(new SpecializationConfig());
             modelBuilder.ApplyConfiguration(new CurriculumUnitConfig());
             modelBuilder.ApplyConfiguration(new GroupConfig());

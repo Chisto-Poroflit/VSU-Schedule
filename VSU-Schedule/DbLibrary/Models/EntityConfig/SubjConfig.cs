@@ -13,6 +13,7 @@ namespace DbLibrary.Models.EntityConfig
                 .ValueGeneratedOnAdd();
             builder.Property(s => s.Name)
                 .HasMaxLength(60);
+            builder.Ignore(s => s.ForTeacher);
         }
     }
 }
