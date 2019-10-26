@@ -24,6 +24,7 @@ namespace DbLibrary
         public DbSet<CurriculumUnit> CurriculumUnits { get; set; }
         public DbSet<Couple> Couples { get; set; }
         public DbSet<CoupleGroup> CoupleGroups { get; set; }
+        public DbSet<Para> Para { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
