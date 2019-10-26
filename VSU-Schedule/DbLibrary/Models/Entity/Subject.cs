@@ -8,6 +8,8 @@ namespace DbLibrary.Models.Entity
     {
         public int Id { get; set; }
 
+        public bool ForTeacher { get; set; }
+
         [Display(Name = "Название")]
         public string Name { get; set; }
 
@@ -17,5 +19,7 @@ namespace DbLibrary.Models.Entity
 
         public List<Couple> Couples { get; set; }
         public CurriculumUnit CurriculumUnit { get; set; }
+        public List<TeacherSubject> TeacherSubjects { get; set; }
+
     }
 }

@@ -16,5 +16,6 @@ namespace DbLibrary.Models.Entity
         public string Position { get; set; }
 
         public List<Couple> Couples { get; set; }
+        public List<TeacherSubject> TeacherSubjects { get; set; }
     }
 }
