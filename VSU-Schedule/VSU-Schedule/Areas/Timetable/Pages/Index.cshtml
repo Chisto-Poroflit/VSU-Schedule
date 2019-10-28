@@ -6,18 +6,34 @@
     var rowSpan = Model.Para.Count + 1;
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
+    int semesterNumber;
 }
+
+<span class="event" id="a" draggable="true">aaa</span>
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
         var active = activeSemesterTab ? "active" : "";
-        
+
         <li class="nav-item">
             <a class="nav-link @active" id="@semGroups.Key-tab" data-toggle="tab" href="#sem-@semGroups.Key" role="tab" aria-controls="@semGroups.Key" aria-selected="@activeSemesterTab">@semGroups.Key семестр</a>
         </li>
         activeSemesterTab = false;
     }
 </ul>
+@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
+{
+    var active = activeSemesterPage ? "show active" : "";
+    <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
+        @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+        {
+            string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
+            <span class="event" id="@ts.SubjectId.@ts.TeacherId" draggable="true">@qwe</span>
+        }
+    </div>
+    activeSemesterTab = false;
+}
 <div class="tab-content" id="myTabContent">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -26,41 +42,43 @@
         <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
             <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th scope="col" colspan="2" rowspan="2"></th>
-                    @foreach (var group in semGroups.OrderBy(g=>g.GroupNumber).GroupBy(g=>g.GroupNumber))
-                    {
-                        var subgroupsCount = group.Count();
+                    <tr>
+                        <th scope="col" colspan="2" rowspan="2"></th>
+                        @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).GroupBy(g => g.GroupNumber))
+                        {
+                            var subgroupsCount = group.Count();
 
-                        <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
-                    }
-                </tr>
-                <tr>
-                
-                    @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).ThenBy(g=>g.SubgroupNumber))
-                    {
-                        <th scope="col" class="text-center">@group.SubgroupNumber</th>
-                    }
-                </tr>
+                            <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
+                        }
+                    </tr>
+                    <tr>
+
+                        @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber))
+                        {
+                            <th scope="col" class="text-center">@group.SubgroupNumber</th>
+                        }
+                    </tr>
                 </thead>
                 <tbody>
 
-                @for (int day = 1; day <= 6; day++)
-                {
-                    <tr>
-                        <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
-                    </tr>
-                    foreach (var para in Model.Para)
+                    @for (int day = 1; day <= 6; day++)
                     {
                         <tr>
-                            <td>@para.StartTime - @para.EndTime</td>
-                            @foreach (var group in semGroups)
-                            {
-                                <td></td>
-                            }
+                            <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
+                        <div class="droppable">
+                            @foreach (var para in Model.Para)
+                            {
+                                <tr>
+                                    <td>@para.StartTime - @para.EndTime</td>
+                                    @foreach (var group in semGroups)
+                                    {                                       
+                                        <td dropzone="copy"></td>                                        
+                                    }
+                                </tr>
+                            }
+                        </div>
                     }
-                }
                 </tbody>
             </table>
             <table class="table">
@@ -70,4 +88,19 @@
         </div>
     }
 </div>
-        
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.event').on("dragstart", function (event) {
+            var dt = event.originalEvent.dataTransfer;
+            dt.setData('Text', $(this).attr('id'));
+        });
+        $('table td').on("dragenter dragover drop", function (event) {
+            event.preventDefault();
+            if (event.type === 'drop') {
+                var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
+                de = $('#' + data).detach();
+                de.appendTo($(this));
+            };
+        });
+    })
+</script>

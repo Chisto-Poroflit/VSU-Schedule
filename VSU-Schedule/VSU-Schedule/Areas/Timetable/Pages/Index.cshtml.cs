@@ -6,6 +6,7 @@ using DbLibrary;
 using DbLibrary.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace VSU_Schedule.Areas.Timetable.Pages
 {
@@ -20,11 +21,16 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         public List<Para> Para { get; private set; }
         public List<Group> Groups { get; private set; }
+        public List<TeacherSubject> TeacherSubjects { get; private set; }
 
         public void OnGet()
         {
             Para = _context.Para.ToList();
             Groups = _context.Groups.ToList();
+            TeacherSubjects = _context.TeacherSubject
+                .Include(g => g.Subject)
+                .Include(g => g.Teacher)
+                .ToList();
         }
     }
 }
