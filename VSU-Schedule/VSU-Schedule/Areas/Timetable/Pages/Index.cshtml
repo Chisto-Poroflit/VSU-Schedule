@@ -9,8 +9,6 @@
     int semesterNumber;
 }
 
-<span class="event" id="a" draggable="true">aaa</span>
-
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -29,7 +27,7 @@
         @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
         {
             string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-            <span class="event" id="@ts.SubjectId.@ts.TeacherId" draggable="true">@qwe</span>
+            <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
         }
     </div>
     activeSemesterTab = false;
@@ -72,8 +70,8 @@
                                 <tr>
                                     <td>@para.StartTime - @para.EndTime</td>
                                     @foreach (var group in semGroups)
-                                    {                                       
-                                        <td dropzone="copy"></td>                                        
+                                    {
+                                        <td dropzone="copy" data-max="2"></td>
                                     }
                                 </tr>
                             }
@@ -90,15 +88,32 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('table td'), function () {
+            $(this).typeTeacher = true;
+            $(this).typeRoom = true;
+        }
         $('.event').on("dragstart", function (event) {
             var dt = event.originalEvent.dataTransfer;
             dt.setData('Text', $(this).attr('id'));
         });
         $('table td').on("dragenter dragover drop", function (event) {
+            if ($(this).children().length == $(this).data('max')) {
+                return false;
+            }
+            if (!$(this).typeTeacher) {
+                return false;
+            }
+            //if (!$(this).typeTeacher && !$(this).typeRoom) {
+            //    return false;
+            //}
             event.preventDefault();
             if (event.type === 'drop') {
                 var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
+                var type = event.originalEvent.dataTransfer.getData('class', $(this).attr('id'))
                 de = $('#' + data).detach();
+                //if (type == "event teacher") {
+                //    $(this).typeTeacher = false;
+                //}
                 de.appendTo($(this));
             };
         });
