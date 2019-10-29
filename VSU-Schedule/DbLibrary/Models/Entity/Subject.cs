@@ -20,6 +20,6 @@ namespace DbLibrary.Models.Entity
         public List<Couple> Couples { get; set; }
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<TeacherSubject> TeacherSubjects { get; set; }
-
+        public List<SemesterSubject> SemesterSubjects { get; set; }
     }
 }

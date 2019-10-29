@@ -15,6 +15,7 @@ namespace DbLibrary
         {
             Database.EnsureCreated();
         }
+        public DbSet<SemesterSubject> SemesterSubject { get; set; }
         public DbSet<TeacherSubject> TeacherSubject { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -34,7 +35,9 @@ namespace DbLibrary
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ParaConfig());
+            modelBuilder.ApplyConfiguration(new SemesterConfig());
             modelBuilder.ApplyConfiguration(new SubjConfig());
+            modelBuilder.ApplyConfiguration(new SemesterSubjectConfig());
             modelBuilder.ApplyConfiguration(new RoomConfig());
             modelBuilder.ApplyConfiguration(new TeacherConfig());
             modelBuilder.ApplyConfiguration(new TeacherSubjectConfig());

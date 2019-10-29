@@ -6,9 +6,11 @@
     var rowSpan = Model.Para.Count + 1;
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
-    int semesterNumber;
 }
 
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />*@
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -20,22 +22,37 @@
         activeSemesterTab = false;
     }
 </ul>
-@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
-{
-    var active = activeSemesterPage ? "show active" : "";
-    <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
-        @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+
+@*<form action="http://httpbin.org/post" method="post">
+    <select data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
+        <span value =""></span>
+        @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
         {
-            string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-            <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+            @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+            {
+                string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
+                <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+            }
         }
-    </div>
-    activeSemesterTab = false;
-}
+    </select>
+</form>*@
+@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
+    {
+        var active = activeSemesterPage ? "show active" : "";
+        <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
+            @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+            {
+                string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
+                <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+            }
+        </div>
+        activeSemesterTab = false;
+    }
 <div class="tab-content" id="myTabContent">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
         var active = activeSemesterPage ? "show active" : "";
+        var semNumber = semGroups.Key;
         activeSemesterPage = false;
         <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
             <table class="table table-bordered">
@@ -64,18 +81,27 @@
                         <tr>
                             <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
-                        <div class="droppable">
-                            @foreach (var para in Model.Para)
-                            {
-                                <tr>
-                                    <td>@para.StartTime - @para.EndTime</td>
-                                    @foreach (var group in semGroups)
-                                    {
-                                        <td dropzone="copy" data-max="2"></td>
-                                    }
-                                </tr>
-                            }
-                        </div>
+                        @foreach (var para in Model.Para)
+                        {
+                <tr>
+                    <td>@para.StartTime - @para.EndTime</td>
+                    @foreach (var group in semGroups)
+                    {
+                        if (@Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day &&
+                                                     g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                        {
+                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).ToList();
+                            var str = $"{@couple.Select(g => g.Subject.Name)} {@couple.Select(g => g.Teacher.FullName)} {@couple.Select(g => g.RoomId)}";
+                            <td dropzone="copy" data-max="2">@str</td>
+                        }
+                        else
+                        {
+                            <td dropzone="copy" data-max="2"></td>
+                        }
+                    }
+                </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -87,11 +113,11 @@
     }
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('table td'), function () {
-            $(this).typeTeacher = true;
-            $(this).typeRoom = true;
-        }
+    //$(document).ready(function () {
+    //    $('table td'), function () {
+    //        $(this).typeTeacher = true;
+    //        $(this).typeRoom = true;
+    //    }
         $('.event').on("dragstart", function (event) {
             var dt = event.originalEvent.dataTransfer;
             dt.setData('Text', $(this).attr('id'));
@@ -100,9 +126,9 @@
             if ($(this).children().length == $(this).data('max')) {
                 return false;
             }
-            if (!$(this).typeTeacher) {
-                return false;
-            }
+            //if (!$(this).typeTeacher) {
+            //    return false;
+            //}
             //if (!$(this).typeTeacher && !$(this).typeRoom) {
             //    return false;
             //}
@@ -119,3 +145,9 @@
         });
     })
 </script>
+
+@*<script type="text/javascript">
+    $(".chosen-select").chosen({
+        no_results_text: "Oops, nothing found!"
+    })
+</script>*@
