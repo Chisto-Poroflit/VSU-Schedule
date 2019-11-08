@@ -25,6 +25,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
         public List<CoupleGroup> CoupleGroups { get; set; }
         public List<Para> Para { get; private set; }
         public List<Group> Groups { get; private set; }
+        public List<Teacher> Teachers { get; private set; }
+        public List<Subject> Subjects { get; private set; }
         public List<TeacherSubject> TeacherSubjects { get; private set; }
 
         public void OnGet()
@@ -32,8 +34,12 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             Para = _context.Para.ToList();
             Groups = _context.Groups.ToList();
             TeacherSubjects = _context.TeacherSubject
-                .Include(g => g.Subject)
-                .Include(g => g.Teacher)
+                .Include(s => s.Subject)
+                .Include(s => s.Teacher)
+                .ToList();
+            Teachers = _context.Teachers
+                .ToList();
+            Subjects = _context.Subjects
                 .ToList();
             Couples = _context.Couples
                 .Include(g => g.Teacher)

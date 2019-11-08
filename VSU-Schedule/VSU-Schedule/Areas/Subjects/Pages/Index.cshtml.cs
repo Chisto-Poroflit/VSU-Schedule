@@ -24,7 +24,8 @@ namespace VSU_Schedule.Areas.Subjects.Pages
         public IList<Subject> Subject { get; set; }
         public async Task OnGetAsync()
         {
-            Subject = await _context.Subjects.ToListAsync();
+            Subject = await _context.Subjects
+                .ToListAsync();
         }
     }
 }

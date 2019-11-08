@@ -13,13 +13,12 @@ namespace DbLibrary.Models.Entity
         [Display(Name = "Название")]
         public string Name { get; set; }
 
-        [Range(1,12, ErrorMessage = "Семестр должен быть в диапазоне от 1 до 12")]
+        [Range(1, 12, ErrorMessage = "Семестр должен быть в диапазоне от 1 до 12")]
         [Display(Name = "Номер Семестра")]
         public int Semester { get; set; }
 
         public List<Couple> Couples { get; set; }
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<TeacherSubject> TeacherSubjects { get; set; }
-        public List<SemesterSubject> SemesterSubjects { get; set; }
     }
 }

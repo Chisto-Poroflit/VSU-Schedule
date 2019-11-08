@@ -9,6 +9,8 @@ namespace DbLibrary.Models.EntityConfig
         public void Configure(EntityTypeBuilder<Couple> builder)
         {
             builder.HasKey(c => c.Id);
+            builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.RoomId });
+            builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.TeacherId });
             builder.Property(c => c.Id)
                 .ValueGeneratedOnAdd();
             builder.Property(c => c.Day)
@@ -28,12 +30,12 @@ namespace DbLibrary.Models.EntityConfig
             builder.HasOne(c => c.Room)
                 .WithMany(r => r.Couples)
                 .HasForeignKey(c => c.RoomId);
+            builder.HasOne(c => c.Teacher)
+                .WithMany(s => s.Couples)
+                .HasForeignKey(c => c.TeacherId);
             builder.HasOne(c => c.Subject)
                 .WithMany(s => s.Couples)
                 .HasForeignKey(c => c.SubjectId);
-            builder.HasOne(c => c.Teacher)
-                .WithMany(t => t.Couples)
-                .HasForeignKey(c => c.TeacherId);
         }
     }
 }

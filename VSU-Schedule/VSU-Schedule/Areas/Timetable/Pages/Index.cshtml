@@ -9,8 +9,22 @@
 }
 
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />*@
+    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />*@
+@*<div>
+    @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
+        {
+            var active = activeSemesterPage ? "show active" : "";
+            <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
+                @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+                {
+                    string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
+                    <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+                }
+            </div>
+            activeSemesterTab = false;
+        }
+</div>*@
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -24,35 +38,34 @@
 </ul>
 
 @*<form action="http://httpbin.org/post" method="post">
-    <select data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
-        <span value =""></span>
-        @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
-        {
-            @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+        <select data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
+            <span value =""></span>
+            @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
             {
-                string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-                <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+                @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
+                {
+                    string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
+                    <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
+                }
             }
-        }
-    </select>
-</form>*@
-@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
-    {
-        var active = activeSemesterPage ? "show active" : "";
-        <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
-            @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
-            {
-                string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-                <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
-            }
-        </div>
-        activeSemesterTab = false;
-    }
+        </select>
+    </form>*@
+
 <div class="tab-content" id="myTabContent">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
         var active = activeSemesterPage ? "show active" : "";
         var semNumber = semGroups.Key;
+        var specList = new List<SelectListItem>
+        {
+            new SelectListItem() {Value = "", Text = "Нет"}
+        };
+        specList.AddRange(Model.Subjects.Where(s => s.Semester == semNumber).Select(x => new SelectListItem(x.Name , x.Id.ToString())));
+        var teacherspecList = new List<SelectListItem>
+        {
+            new SelectListItem() {Value = "", Text = "Нет"}
+        };
+        teacherspecList.AddRange(Model.Teachers.Select(x => new SelectListItem(x.FullName , x.Id.ToString())));   
         activeSemesterPage = false;
         <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
             <table class="table table-bordered">
@@ -83,24 +96,61 @@
                         </tr>
                         @foreach (var para in Model.Para)
                         {
-                <tr>
-                    <td>@para.StartTime - @para.EndTime</td>
-                    @foreach (var group in semGroups)
-                    {
-                        if (@Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day &&
-                                                     g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
-                        {
-                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
-                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).ToList();
-                            var str = $"{@couple.Select(g => g.Subject.Name)} {@couple.Select(g => g.Teacher.FullName)} {@couple.Select(g => g.RoomId)}";
-                            <td dropzone="copy" data-max="2">@str</td>
-                        }
-                        else
-                        {
-                            <td dropzone="copy" data-max="2"></td>
-                        }
-                    }
-                </tr>
+                            <tr>
+                                <td>@para.StartTime - @para.EndTime</td>
+                                @foreach (var group in semGroups)
+                                {
+                                    @*<td data-max="2"></td>*@
+                                    if (@Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day &&
+                                                           g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                    {
+                                        var couple = Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                        @foreach (var item in specList)
+                                        {
+                                            if (item.Text == couple.Subject.Name)
+                                            {
+                                                item.Selected = true;
+                                            }
+                                        }
+                                        @foreach (var item in teacherspecList)
+                                        {
+                                            if (item.Text == couple.Teacher.FullName)
+                                            {
+                                                item.Selected = true;
+                                            }
+                                        }
+                                        <td>
+                                            @Html.DropDownListFor(model => model.Couples,
+                                            specList,
+                                            new {@class = "form-control"})
+                                            @Html.DropDownListFor(model => model.Couples,
+                                            teacherspecList,
+                                            new {@class = "form-control"})
+                                        </td>
+                                            @*var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                            var str = $"{@couple.Subject.Name} {@couple.Teacher.FullName} {@couple.RoomId}";
+                                            <td data-max="2"><span class="event teacher" id="@couple.SubjectId@couple.TeacherId" draggable="true">@str</span></td>*@
+                                    }
+                                    else
+                                    {
+                                        //var specList = new List<SelectListItem>
+                                        //{
+                                        //    new SelectListItem() {Value = "", Text = "Нет", Selected = true}
+                                        //};
+                                        //specList.AddRange(Model.TeacherSubjects.Select(x => new SelectListItem(x.Subject.Name + " " + x.Teacher.FullName, x.SubjectId.ToString())));
+                                            <td data-max="2">
+                                                @Html.DropDownListFor(model => model.Couples,
+                                                specList,
+                                                new {@class = "form-control"})
+                                                @Html.DropDownListFor(model => model.Couples,
+                                                teacherspecList,
+                                                new {@class = "form-control"})
+                                            </td>
+                                        }
+                                    }
+                            </tr>
                         }
                     }
                 </tbody>
@@ -118,36 +168,36 @@
     //        $(this).typeTeacher = true;
     //        $(this).typeRoom = true;
     //    }
-        $('.event').on("dragstart", function (event) {
-            var dt = event.originalEvent.dataTransfer;
-            dt.setData('Text', $(this).attr('id'));
-        });
-        $('table td').on("dragenter dragover drop", function (event) {
-            if ($(this).children().length == $(this).data('max')) {
-                return false;
-            }
-            //if (!$(this).typeTeacher) {
-            //    return false;
+    $('.event').on("dragstart", function (event) {
+        var dt = event.originalEvent.dataTransfer;
+        dt.setData('Text', $(this).attr('id'));
+    });
+    $('table td').on("dragenter dragover drop", function (event) {
+        if ($(this).children().length == $(this).data('max')) {
+            return false;
+        }
+        //if (!$(this).typeTeacher) {
+        //    return false;
+        //}
+        //if (!$(this).typeTeacher && !$(this).typeRoom) {
+        //    return false;
+        //}
+        event.preventDefault();
+        if (event.type === 'drop') {
+            var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
+            var type = event.originalEvent.dataTransfer.getData('class', $(this).attr('id'))
+            de = $('#' + data).detach();
+            //if (type == "event teacher") {
+            //    $(this).typeTeacher = false;
             //}
-            //if (!$(this).typeTeacher && !$(this).typeRoom) {
-            //    return false;
-            //}
-            event.preventDefault();
-            if (event.type === 'drop') {
-                var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
-                var type = event.originalEvent.dataTransfer.getData('class', $(this).attr('id'))
-                de = $('#' + data).detach();
-                //if (type == "event teacher") {
-                //    $(this).typeTeacher = false;
-                //}
-                de.appendTo($(this));
-            };
-        });
+            de.appendTo($(this));
+        };
+    });
     })
 </script>
 
 @*<script type="text/javascript">
-    $(".chosen-select").chosen({
-        no_results_text: "Oops, nothing found!"
-    })
-</script>*@
+        $(".chosen-select").chosen({
+            no_results_text: "Oops, nothing found!"
+        })
+    </script>*@
