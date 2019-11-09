@@ -23,13 +23,7 @@
 @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
 {
     var active = activeSemesterPage ? "show active" : "";
-    <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
-        @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
-        {
-            string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-            <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
-        }
-    </div>
+    
     activeSemesterTab = false;
 }
 <div class="tab-content" id="myTabContent">
@@ -64,18 +58,20 @@
                         <tr>
                             <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
-                        <div class="droppable">
-                            @foreach (var para in Model.Para)
-                            {
-                                <tr>
-                                    <td>@para.StartTime - @para.EndTime</td>
-                                    @foreach (var group in semGroups)
-                                    {
-                                        <td dropzone="copy" data-max="2"></td>
-                                    }
-                                </tr>
-                            }
-                        </div>
+
+                        @foreach (var para in Model.Para)
+                        {
+                            <tr>
+                                <td>@para.StartTime - @para.EndTime</td>
+                                @foreach (var group in semGroups)
+                                {
+                                    <td>
+                                        <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime">Не выбрано</button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+
                     }
                 </tbody>
             </table>
@@ -86,36 +82,48 @@
         </div>
     }
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('table td'), function () {
-            $(this).typeTeacher = true;
-            $(this).typeRoom = true;
-        }
-        $('.event').on("dragstart", function (event) {
-            var dt = event.originalEvent.dataTransfer;
-            dt.setData('Text', $(this).attr('id'));
-        });
-        $('table td').on("dragenter dragover drop", function (event) {
-            if ($(this).children().length == $(this).data('max')) {
-                return false;
-            }
-            if (!$(this).typeTeacher) {
-                return false;
-            }
-            //if (!$(this).typeTeacher && !$(this).typeRoom) {
-            //    return false;
-            //}
-            event.preventDefault();
-            if (event.type === 'drop') {
-                var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
-                var type = event.originalEvent.dataTransfer.getData('class', $(this).attr('id'))
-                de = $('#' + data).detach();
-                //if (type == "event teacher") {
-                //    $(this).typeTeacher = false;
-                //}
-                de.appendTo($(this));
-            };
-        });
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление занятия</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Предмет</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Преподаватель</label>
+                        <input type="text" class="form-control" id="message-text">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Аудитория</label>
+                        <input type="text" class="form-control" id="message-text">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary">ОК</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('Группа ' + recipient)
+        //modal.find('.modal-body input').val(recipient)
     })
 </script>
