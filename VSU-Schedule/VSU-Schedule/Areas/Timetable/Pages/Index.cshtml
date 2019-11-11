@@ -6,9 +6,19 @@
     var rowSpan = Model.Para.Count + 1;
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
-    int semesterNumber;
 }
+<style>
+    ul.dropdown-search-box {
+        max-height: 300px;
+        width: 270px;
+        overflow-y: auto;
+    }
 
+        ul.dropdown-search-box .search-box {
+            padding: 0 5px 5px 5px;
+            border-bottom: 1px solid #ddd;
+        }
+</style>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -23,7 +33,7 @@
 @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
 {
     var active = activeSemesterPage ? "show active" : "";
-    
+
     activeSemesterTab = false;
 }
 <div class="tab-content" id="myTabContent">
@@ -66,7 +76,7 @@
                                 @foreach (var group in semGroups)
                                 {
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
                                     </td>
                                 }
                             </tr>
@@ -94,16 +104,67 @@
             <form method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Предмет</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="recipient-name" class="col-form-label">Предмет</label>
+                            </div>
+                            <div class="col-8">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="select" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать из списка
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" /></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Another action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Something else here</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Преподаватель</label>
-                        <input type="text" class="form-control" id="message-text">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Преподаватель</label>
+                            </div>
+                            <div class="col-8">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="select" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать из списка
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" /></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Another action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Something else here</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Аудитория</label>
-                        <input type="text" class="form-control" id="message-text">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Аудитория</label>
+                            </div>
+                            <div class="col-8">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="select" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать из списка
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" /></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Another action</a></li>
+                                        <li role="presentation" class="dropdown-item"><a href="javascript:void(0)" role="menuitem">Something else here</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -126,4 +187,19 @@
         modal.find('.modal-title').text('Группа ' + recipient)
         //modal.find('.modal-body input').val(recipient)
     })
+
+    var ul = $('.dropdown-search-box');
+    var input = ul.find('input');
+    var li = ul.find('li.dropdown-item');
+
+    input.keyup(function () {
+        var val = $(this).val();
+
+        if (val.length > 1) {
+            li.hide();
+            li.filter(':contains("' + val + '")').show();
+        } else {
+            li.show();
+        }
+    });
 </script>
