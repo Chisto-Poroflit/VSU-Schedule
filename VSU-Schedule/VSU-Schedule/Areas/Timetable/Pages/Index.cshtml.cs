@@ -23,6 +23,9 @@ namespace VSU_Schedule.Areas.Timetable.Pages
         public List<Group> Groups { get; private set; }
         public List<TeacherSubject> TeacherSubjects { get; private set; }
 
+        public List<Room> Rooms { get; private set; }
+        public List<Subject> Subjects { get; private set; }
+
         public void OnGet()
         {
             Para = _context.Para.ToList();
@@ -31,6 +34,13 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .Include(g => g.Subject)
                 .Include(g => g.Teacher)
                 .ToList();
+            Rooms = _context.Rooms.ToList();
+            Subjects = _context.Subjects.ToList();
+        }
+
+        public JsonResult OnGetTeachersSubject(string subjectName)
+        {
+            return new JsonResult(_context.TeacherSubject.Where(s=>s.Subject.Name == subjectName).Select(s=>s.Teacher).ToList());
         }
 
         public async Task<IActionResult> OnPostAsync()
