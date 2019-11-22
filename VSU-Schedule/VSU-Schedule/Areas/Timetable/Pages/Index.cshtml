@@ -3,28 +3,22 @@
 @model VSU_Schedule.Areas.Timetable.Pages.IndexModel
 @{
     ViewData["Title"] = "Расписание";
-    var rowSpan = Model.Para.Count + 1;
+    var rowSpan = Model.Para.Count * 2 + 1;
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
 }
+<style>
+    ul.dropdown-search-box {
+        max-height: 300px;
+        width: 270px;
+        overflow-y: auto;
+    }
 
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />*@
-@*<div>
-    @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
-        {
-            var active = activeSemesterPage ? "show active" : "";
-            <div id="sem-@sem.Key" aria-labelledby="@sem.Key-tab">
-                @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
-                {
-                    string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-                    <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
-                }
-            </div>
-            activeSemesterTab = false;
+        ul.dropdown-search-box .search-box {
+            padding: 0 5px 5px 5px;
+            border-bottom: 1px solid #ddd;
         }
-</div>*@
+</style>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
@@ -36,36 +30,16 @@
         activeSemesterTab = false;
     }
 </ul>
+@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
+{
+    var active = activeSemesterPage ? "show active" : "";
 
-@*<form action="http://httpbin.org/post" method="post">
-        <select data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
-            <span value =""></span>
-            @foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
-            {
-                @foreach (var ts in sem.OrderBy(g => g.Subject.Name))
-                {
-                    string qwe = $"{@ts.Subject.Name} {@ts.Teacher.FullName}";
-                    <span class="event teacher" id="@ts.SubjectId@ts.TeacherId" draggable="true">@qwe</span>
-                }
-            }
-        </select>
-    </form>*@
-
+    activeSemesterTab = false;
+}
 <div class="tab-content" id="myTabContent">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {
         var active = activeSemesterPage ? "show active" : "";
-        var semNumber = semGroups.Key;
-        var specList = new List<SelectListItem>
-        {
-            new SelectListItem() {Value = "", Text = "Нет"}
-        };
-        specList.AddRange(Model.Subjects.Where(s => s.Semester == semNumber).Select(x => new SelectListItem(x.Name , x.Id.ToString())));
-        var teacherspecList = new List<SelectListItem>
-        {
-            new SelectListItem() {Value = "", Text = "Нет"}
-        };
-        teacherspecList.AddRange(Model.Teachers.Select(x => new SelectListItem(x.FullName , x.Id.ToString())));   
         activeSemesterPage = false;
         <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
             <table class="table table-bordered">
@@ -91,66 +65,49 @@
 
                     @for (int day = 1; day <= 6; day++)
                     {
+
                         <tr>
                             <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
+                        
                         @foreach (var para in Model.Para)
                         {
-                            <tr>
-                                <td>@para.StartTime - @para.EndTime</td>
-                                @foreach (var group in semGroups)
-                                {
-                                    @*<td data-max="2"></td>*@
-                                    if (@Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day &&
-                                                           g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                            @for (int numdenum = 0; numdenum < 2; numdenum++)
+                            {
+                                <tr>
+                                    @if (numdenum == 0)
                                     {
-                                        var couple = Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
-                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
-                                        @foreach (var item in specList)
-                                        {
-                                            if (item.Text == couple.Subject.Name)
-                                            {
-                                                item.Selected = true;
-                                            }
-                                        }
-                                        @foreach (var item in teacherspecList)
-                                        {
-                                            if (item.Text == couple.Teacher.FullName)
-                                            {
-                                                item.Selected = true;
-                                            }
-                                        }
-                                        <td>
-                                            @Html.DropDownListFor(model => model.Couples,
-                                            specList,
-                                            new {@class = "form-control"})
-                                            @Html.DropDownListFor(model => model.Couples,
-                                            teacherspecList,
-                                            new {@class = "form-control"})
-                                        </td>
-                                            @*var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
-                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
-                                            var str = $"{@couple.Subject.Name} {@couple.Teacher.FullName} {@couple.RoomId}";
-                                            <td data-max="2"><span class="event teacher" id="@couple.SubjectId@couple.TeacherId" draggable="true">@str</span></td>*@
+                                        <td rowspan="2">@para.StartTime - @para.EndTime</td>
                                     }
-                                    else
+                                    @foreach (var group in semGroups)
                                     {
-                                        //var specList = new List<SelectListItem>
-                                        //{
-                                        //    new SelectListItem() {Value = "", Text = "Нет", Selected = true}
-                                        //};
-                                        //specList.AddRange(Model.TeacherSubjects.Select(x => new SelectListItem(x.Subject.Name + " " + x.Teacher.FullName, x.SubjectId.ToString())));
-                                            <td data-max="2">
-                                                @Html.DropDownListFor(model => model.Couples,
-                                                specList,
-                                                new {@class = "form-control"})
-                                                @Html.DropDownListFor(model => model.Couples,
-                                                teacherspecList,
-                                                new {@class = "form-control"})
+                                        if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                            </td>                                                                                        
+                                        }
+                                        else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                            </td>                                                                                        
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
                                             </td>
                                         }
                                     }
-                            </tr>
+                                </tr>
+                            }
                         }
                     }
                 </tbody>
@@ -162,42 +119,152 @@
         </div>
     }
 </div>
-<script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('table td'), function () {
-    //        $(this).typeTeacher = true;
-    //        $(this).typeRoom = true;
-    //    }
-    $('.event').on("dragstart", function (event) {
-        var dt = event.originalEvent.dataTransfer;
-        dt.setData('Text', $(this).attr('id'));
-    });
-    $('table td').on("dragenter dragover drop", function (event) {
-        if ($(this).children().length == $(this).data('max')) {
-            return false;
-        }
-        //if (!$(this).typeTeacher) {
-        //    return false;
-        //}
-        //if (!$(this).typeTeacher && !$(this).typeRoom) {
-        //    return false;
-        //}
-        event.preventDefault();
-        if (event.type === 'drop') {
-            var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
-            var type = event.originalEvent.dataTransfer.getData('class', $(this).attr('id'))
-            de = $('#' + data).detach();
-            //if (type == "event teacher") {
-            //    $(this).typeTeacher = false;
-            //}
-            de.appendTo($(this));
-        };
-    });
-    })
-</script>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление занятия</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="recipient-name" class="col-form-label">Предмет</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex" id="subj-select" onclick="subjectSelected()">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="subj-select-button" data-toggle="dropdown">
+                                        Выбрать
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subj-dropdown">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subj-dropdown'))" /></li>
+                                        @foreach (var subject in Model.Subjects)
+                                        {
+                                            <li role="presentation" class="dropdown-item" onclick="$('#subj-select-button').html('@subject.Name')">@subject.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Преподаватель</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="teacher-select" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="teacher-dropdown">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))" /></li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Аудитория</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="room-select" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="room-dropdown">
+                                        <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#room-dropdown'))" /></li>
+                                        @foreach (var room in Model.Rooms)
+                                        {
+                                            <li role="presentation" class="dropdown-item" onclick="$('#room-select').html('@room.Number')">@room.Number</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-@*<script type="text/javascript">
-        $(".chosen-select").chosen({
-            no_results_text: "Oops, nothing found!"
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary">ОК</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.modal-title').text('Группа ' + recipient)
+            //modal.find('.modal-body input').val(recipient)
         })
-    </script>*@
+
+        function searchbox(ul) {
+            //var ul = $('#'+id);
+            var input = ul.find('input');
+            var li = ul.find('li.dropdown-item');
+
+            input.keyup(function () {
+                var val = $(this).val();
+
+                if (val.length > 1) {
+                    li.hide();
+                    li.filter(':contains("' + val + '")').show();
+                } else {
+                    li.show();
+                }
+            });
+        }
+
+        function subjectSelected() {
+            var s = $('#subj-select');
+            if (s.hasClass('show')) {
+                var subjname = $('#subj-select-button').html();
+                $("#teacher-dropdown").empty();
+                //$("#SubCategoryId").append("<option value=''>Select SubCategory</option>");
+                $.getJSON(`?handler=TeachersSubject&subjectName=${subjname}`, (data) => {
+                    $("#teacher-dropdown").append(`<li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))" /></li>`);
+                    $.each(data, function (i, item) {
+                        $("#teacher-dropdown").append(`<li role="presentation" class="dropdown-item" onclick="$('#teacher-select').html('${item.fullName}')">${item.fullName}</li>`);
+                        console.log(item);
+
+                        //$("#teacher-list").append(`<option value="${item.subCategoryId}">${item.subCategoryName}</option>`);
+                    });
+                });
+            }
+
+        }
+
+            //$("#subj-select").click(function () {
+            //    alert("click");
+            //    if ($(this).hasClass('show')) {
+            //        alert("it works");
+            //        //var subjectId = $(this).html;
+            //        //$("#teacher-select").empty();
+            //        ////$("#SubCategoryId").append("<option value=''>Select SubCategory</option>");
+            //        //$.getJSON(`?handler=TeachersSubject&subjectIs=${subjectId}`, (data) => {
+            //        //    $.each(data, function (i, item) {
+            //        //        $("#SubCategoryId").append(`<option value="${item.subCategoryId}">${item.subCategoryName}</option>`);
+            //        //    });
+            //        //});
+            //    }
+            //});
+    </script>
+}

@@ -21,32 +21,47 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         [BindProperty]
         public List<Couple> Couples { get; set; }
-        [BindProperty]
-        public List<CoupleGroup> CoupleGroups { get; set; }
         public List<Para> Para { get; private set; }
         public List<Group> Groups { get; private set; }
-        public List<Teacher> Teachers { get; private set; }
-        public List<Subject> Subjects { get; private set; }
         public List<TeacherSubject> TeacherSubjects { get; private set; }
+
+        public List<Room> Rooms { get; private set; }
+        public List<Subject> Subjects { get; private set; }
 
         public void OnGet()
         {
             Para = _context.Para.ToList();
             Groups = _context.Groups.ToList();
             TeacherSubjects = _context.TeacherSubject
-                .Include(s => s.Subject)
-                .Include(s => s.Teacher)
+                .Include(g => g.Subject)
+                .Include(g => g.Teacher)
                 .ToList();
-            Teachers = _context.Teachers
-                .ToList();
-            Subjects = _context.Subjects
-                .ToList();
+            Rooms = _context.Rooms.ToList();
+            Subjects = _context.Subjects.ToList();
             Couples = _context.Couples
                 .Include(g => g.Teacher)
                 .Include(g => g.Subject)
                 .Include(g => g.CoupleGroups)
                 .ThenInclude(g => g.Group)
                 .ToList();
+        }
+
+        public JsonResult OnGetTeachersSubject(string subjectName)
+        {
+            return new JsonResult(_context.TeacherSubject.Where(s=>s.Subject.Name == subjectName).Select(s=>s.Teacher).ToList());
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            //_context.Customers.Add(Customer);
+            //await _context.SaveChangesAsync();
+
+            return RedirectToPage("./Index");
         }
     }
 }

@@ -3,37 +3,3 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<table id="#our_table"  border="1">
-    <tr>
-        <th>head1</th>
-        <th>head1</th>
-        <th>head1</th>
-    </tr>
-    <tr>
-        <td><span class="event" id="a" draggable="true">aaa</span></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('.event').on("dragstart", function (event) {
-            var dt = event.originalEvent.dataTransfer;
-            dt.setData('Text', $(this).attr('id'));
-        });
-        $('table td').on("dragenter dragover drop", function (event) {  
-            event.preventDefault();
-            if (event.type === 'drop') {
-                var data = event.originalEvent.dataTransfer.getData('Text',$(this).attr('id'));
-                de=$('#'+data).detach();
-                de.appendTo($(this)); 
-            };
-        });
-    })
-</script>

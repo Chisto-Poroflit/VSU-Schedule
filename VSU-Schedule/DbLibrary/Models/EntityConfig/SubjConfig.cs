@@ -14,9 +14,6 @@ namespace DbLibrary.Models.EntityConfig
             builder.Property(s => s.Name)
                 .HasMaxLength(60);
             builder.Ignore(s => s.ForTeacher);
-            //builder.HasOne(g => g.Semester)
-            //    .WithOne(g => g.Subject)
-            //    .HasForeignKey<Subject>(g => g.SemesterNumber);
         }
     }
 }
