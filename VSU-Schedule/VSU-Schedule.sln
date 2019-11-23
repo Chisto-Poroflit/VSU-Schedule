@@ -3,14 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbLibrary", "DbLibrary\DbLibrary.csproj", "{1F46706B-8A90-458D-AE20-D733B4007673}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSU-Schedule", "VSU-Schedule\VSU-Schedule.csproj", "{FDF6399A-794C-48F5-81C0-CEEF9944140E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelLibrary", "ExcelLibrary\ExcelLibrary.csproj", "{CA1761B1-B557-400C-9FEB-2E4470E720D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{2F574D89-8E53-419F-A3EF-7814686E50F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbLibrary", "DbLibrary\DbLibrary.csproj", "{1F46706B-8A90-458D-AE20-D733B4007673}"
-EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
