@@ -19,7 +19,6 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             _context = context;
         }
 
-        [BindProperty]
         public List<Couple> Couples { get; set; }
         public List<Para> Para { get; private set; }
         public List<Group> Groups { get; private set; }
@@ -51,6 +50,17 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             return new JsonResult(_context.TeacherSubject.Where(s=>s.Subject.Name == subjectName).Select(s=>s.Teacher).ToList());
         }
 
+        public class InputModel
+        {
+            public int GroupId { get; set; }
+            public int SubjectId { get; set; }
+            public string RoomId { get; set; }
+            public int TeacherId { get; set; }
+        }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -58,6 +68,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 return Page();
             }
 
+            var input = Input;
             //_context.Customers.Add(Customer);
             //await _context.SaveChangesAsync();
 

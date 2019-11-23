@@ -87,7 +87,7 @@
                                             var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-group="@group.Id" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
                                             </td>                                                                                        
                                         }
                                         else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
@@ -96,13 +96,13 @@
                                             var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-group="@group.Id" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
                                             </td>                                                                                        
                                         }
                                         else
                                         {
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-group="@group.Id" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
                                             </td>
                                         }
                                     }
@@ -140,11 +140,12 @@
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="subj-select-button" data-toggle="dropdown">
                                         Выбрать
                                     </button>
+                                    <input type="hidden" id="subjectId" asp-for="Input.SubjectId" />
                                     <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subj-dropdown">
                                         <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subj-dropdown'))" /></li>
                                         @foreach (var subject in Model.Subjects)
                                         {
-                                            <li role="presentation" class="dropdown-item" onclick="$('#subj-select-button').html('@subject.Name')">@subject.Name</li>
+                                            <li role="presentation" class="dropdown-item" onclick="setSubject('@subject.Name', @subject.Id)">@subject.Name</li>
                                         }
                                     </ul>
                                 </div>
@@ -160,11 +161,10 @@
                                 <div class="dropdown d-flex">
                                     <button type="button" class="btn btn-secondary dropdown-toggle" id="teacher-select" data-toggle="dropdown" aria-expanded="false">
                                         Выбрать
-                                        <span class="caret"></span>
                                     </button>
+                                    <input type="hidden" id="teacherId" asp-for="Input.TeacherId" />
                                     <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="teacher-dropdown">
                                         <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))" /></li>
-                                        
                                     </ul>
                                 </div>
                             </div>
@@ -181,11 +181,12 @@
                                         Выбрать
                                         <span class="caret"></span>
                                     </button>
+                                    <input type="hidden" id="roomId" asp-for="Input.RoomId" />
                                     <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="room-dropdown">
                                         <li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#room-dropdown'))" /></li>
                                         @foreach (var room in Model.Rooms)
                                         {
-                                            <li role="presentation" class="dropdown-item" onclick="$('#room-select').html('@room.Number')">@room.Number</li>
+                                            <li role="presentation" class="dropdown-item" onclick="setRoom(@room.Number)">@room.Number</li>
                                         }
                                     </ul>
                                 </div>
@@ -194,9 +195,11 @@
                     </div>
 
                 </div>
+                
+                <input id="groupId" asp-for="Input.GroupId" type="hidden">
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary">ОК</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">ОК</button>
                 </div>
             </form>
         </div>
@@ -204,17 +207,34 @@
     </div>
 </div>
 
-@section Scripts{
+
     <script>
         $('#exampleModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var recipient = button.data('whatever') // Extract info from data-* attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var groupId = button.data('group')
             var modal = $(this)
             modal.find('.modal-title').text('Группа ' + recipient)
+            modal.find('#groupId').val(groupId)
             //modal.find('.modal-body input').val(recipient)
         })
+
+        function setRoom(roomNumber) {
+            $('#room-select').html(roomNumber)
+            $('#roomId').val(roomNumber)
+        }
+
+        function setSubject(subjectName, subjectId) {
+            $('#subj-select-button').html(subjectName)
+            $('#subjectId').val(subjectId)
+        }
+
+        function setTeacher(teacherName, teacherId) {
+            $('#teacher-select').html(teacherName)
+            $('#teacherId').val(teacherId)
+        }
 
         function searchbox(ul) {
             //var ul = $('#'+id);
@@ -224,7 +244,7 @@
             input.keyup(function () {
                 var val = $(this).val();
 
-                if (val.length > 1) {
+                if (val.length >= 1) {
                     li.hide();
                     li.filter(':contains("' + val + '")').show();
                 } else {
@@ -232,6 +252,8 @@
                 }
             });
         }
+
+       
 
         function subjectSelected() {
             var s = $('#subj-select');
@@ -242,10 +264,8 @@
                 $.getJSON(`?handler=TeachersSubject&subjectName=${subjname}`, (data) => {
                     $("#teacher-dropdown").append(`<li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))" /></li>`);
                     $.each(data, function (i, item) {
-                        $("#teacher-dropdown").append(`<li role="presentation" class="dropdown-item" onclick="$('#teacher-select').html('${item.fullName}')">${item.fullName}</li>`);
+                        $("#teacher-dropdown").append(`<li role="presentation" class="dropdown-item" onclick="setTeacher('${item.fullName}', ${item.id})">${item.fullName}</li>`);
                         console.log(item);
-
-                        //$("#teacher-list").append(`<option value="${item.subCategoryId}">${item.subCategoryName}</option>`);
                     });
                 });
             }
@@ -267,4 +287,3 @@
             //    }
             //});
     </script>
-}
