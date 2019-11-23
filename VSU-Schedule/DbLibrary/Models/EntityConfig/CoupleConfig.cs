@@ -9,6 +9,8 @@ namespace DbLibrary.Models.EntityConfig
         public void Configure(EntityTypeBuilder<Couple> builder)
         {
             builder.HasKey(c => c.Id);
+            //builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.RoomId });
+            //builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.TeacherId });
             builder.Property(c => c.Id)
                 .ValueGeneratedOnAdd();
             builder.Property(c => c.Day)

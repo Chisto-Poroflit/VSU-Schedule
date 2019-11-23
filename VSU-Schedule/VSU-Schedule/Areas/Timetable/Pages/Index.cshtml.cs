@@ -19,6 +19,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             _context = context;
         }
 
+        [BindProperty]
+        public List<Couple> Couples { get; set; }
         public List<Para> Para { get; private set; }
         public List<Group> Groups { get; private set; }
         public List<TeacherSubject> TeacherSubjects { get; private set; }
@@ -36,6 +38,12 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .ToList();
             Rooms = _context.Rooms.ToList();
             Subjects = _context.Subjects.ToList();
+            Couples = _context.Couples
+                .Include(g => g.Teacher)
+                .Include(g => g.Subject)
+                .Include(g => g.CoupleGroups)
+                .ThenInclude(g => g.Group)
+                .ToList();
         }
 
         public JsonResult OnGetTeachersSubject(string subjectName)

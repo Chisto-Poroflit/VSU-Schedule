@@ -3,7 +3,7 @@
 @model VSU_Schedule.Areas.Timetable.Pages.IndexModel
 @{
     ViewData["Title"] = "Расписание";
-    var rowSpan = Model.Para.Count + 1;
+    var rowSpan = Model.Para.Count * 2 + 1;
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
 }
@@ -65,23 +65,50 @@
 
                     @for (int day = 1; day <= 6; day++)
                     {
+
                         <tr>
                             <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
-
+                        
                         @foreach (var para in Model.Para)
                         {
-                            <tr>
-                                <td>@para.StartTime - @para.EndTime</td>
-                                @foreach (var group in semGroups)
-                                {
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
-                                    </td>
-                                }
-                            </tr>
+                            @for (int numdenum = 0; numdenum < 2; numdenum++)
+                            {
+                                <tr>
+                                    @if (numdenum == 0)
+                                    {
+                                        <td rowspan="2">@para.StartTime - @para.EndTime</td>
+                                    }
+                                    @foreach (var group in semGroups)
+                                    {
+                                        if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                            </td>                                                                                        
+                                        }
+                                        else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = @Model.Couples.Where(g => g.ParaId == para.Number && g.Day == day &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)).FirstOrDefault();
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать">@couple.Subject.Name @couple.RoomId</button>
+                                            </td>                                                                                        
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" style="width: 64px" data-toggle="modal" data-target="#exampleModal" data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Выбрать"><i class="fa fa-pencil"></i></button>
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
                         }
-
                     }
                 </tbody>
             </table>
