@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace VSU_Schedule.Areas.Timetable.Pages
+namespace VSU_Schedule.Areas.MainSchedule.Pages
 {
     public class IndexModel : PageModel
     {
@@ -18,6 +18,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
         {
             _context = context;
         }
+<<<<<<< Updated upstream:VSU-Schedule/VSU-Schedule/Areas/Timetable/Pages/Index.cshtml.cs:VSU-Schedule/VSU-Schedule/Areas/Timetable/Pages/Index.cshtml.cs
 
         public List<Couple> Couples { get; set; }
         public List<CoupleGroup> CoupleGroups { get; set; }
@@ -28,8 +29,19 @@ namespace VSU_Schedule.Areas.Timetable.Pages
         public List<Room> Rooms { get; private set; }
         public List<Subject> Subjects { get; private set; }
 
+=======
+        public List<Couple> Couples { get; set; }
+        public List<Para> Para { get; private set; }
+        public List<Group> Groups { get; private set; }
+>>>>>>> Stashed changes:VSU-Schedule-new_branch/VSU-Schedule/VSU-Schedule/Areas/MainSchedule/Pages/Index.cshtml.cs:VSU-Schedule-new_branch/VSU-Schedule/VSU-Schedule/Areas/MainSchedule/Pages/Index.cshtml.cs
         public void OnGet()
         {
+            Couples = _context.Couples
+                .Include(g => g.Subject)
+                .Include(g => g.Teacher)
+                .Include(g => g.CoupleGroups)
+                .ThenInclude(g => g.Group)
+                .ToList();
             Para = _context.Para.ToList();
             Groups = _context.Groups.ToList();
             TeacherSubjects = _context.TeacherSubject
