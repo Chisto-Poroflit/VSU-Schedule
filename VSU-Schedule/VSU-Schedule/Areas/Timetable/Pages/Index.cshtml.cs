@@ -47,9 +47,9 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             CoupleGroups = _context.CoupleGroups.ToList();
         }
 
-        public JsonResult OnGetTeachersSubject(string subjectName)
+        public JsonResult OnGetTeachersSubject(int subjectId)
         {
-            return new JsonResult(_context.TeacherSubject.Where(s => s.Subject.Name == subjectName)
+            return new JsonResult(_context.TeacherSubject.Where(s => s.Subject.Id == subjectId)
                 .Select(s => s.Teacher).ToList());
         }
 
