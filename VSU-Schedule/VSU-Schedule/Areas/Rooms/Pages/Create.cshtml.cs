@@ -31,7 +31,7 @@ namespace VSU_Schedule.Areas.Rooms.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || _context.Rooms.ToList().Any(r=>r.Number == Room.Number))
             {
                 return Page();
             }
