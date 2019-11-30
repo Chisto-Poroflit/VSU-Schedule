@@ -26,12 +26,16 @@ namespace VSU_Schedule.Areas.Rooms.Pages
             return Page();
         }
 
-        [BindProperty]
-        public Room Room { get; set; }
+        [BindProperty] public Room Room { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Rooms.ToList().Any(r=>r.Number == Room.Number))
+            if (_context.Rooms.ToList().Any(r => r.Number == Room.Number))
+            {
+                ModelState.AddModelError("Room.Number", "Аудитория с таким номером уже существует");
+            }
+
+            if (!ModelState.IsValid)
             {
                 return Page();
             }

@@ -5,43 +5,55 @@
     ViewData["Title"] = "Добавить аудиторию";
 }
 <h4>Новая аудитория</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Room.Number" class="control-label"></label>
-                <input asp-for="Room.Number" class="form-control" />
+                <input asp-for="Room.Number" class="form-control"/>
                 <span asp-validation-for="Room.Number" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Room.Capacity" class="control-label"></label>
-                <input asp-for="Room.Capacity" class="form-control" />
+                <input asp-for="Room.Capacity" class="form-control"/>
                 <span asp-validation-for="Room.Capacity" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Room.IsLecture" /> @Html.DisplayNameFor(model => model.Room.IsLecture)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Room.IsPractice" /> @Html.DisplayNameFor(model => model.Room.IsPractice)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Room.IsLaboratory" /> @Html.DisplayNameFor(model => model.Room.IsLaboratory)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Room.IsSpecial" /> @Html.DisplayNameFor(model => model.Room.IsSpecial)
-                </label>
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" asp-for="Room.IsLecture" />
+                    <label class="custom-control-label" asp-for="Room.IsLecture">
+                        @Html.DisplayNameFor(model => model.Room.IsLecture)
+                    </label>
+                </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Создать" class="btn btn-primary" />
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" asp-for="Room.IsPractice" />
+                    <label class="custom-control-label" asp-for="Room.IsPractice">
+                        @Html.DisplayNameFor(model => model.Room.IsPractice)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" type="checkbox" asp-for="Room.IsLaboratory" />
+                    <label class="custom-control-label" asp-for="Room.IsLaboratory">
+                       @Html.DisplayNameFor(model => model.Room.IsLaboratory)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" asp-for="Room.IsSpecial" />
+                    <label class="custom-control-label" asp-for="Room.IsSpecial">
+                        @Html.DisplayNameFor(model => model.Room.IsSpecial)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary"/>
             </div>
         </form>
     </div>
@@ -52,5 +64,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
