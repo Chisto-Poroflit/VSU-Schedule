@@ -68,21 +68,21 @@
                                         {
                                             var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
                                                                                            g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
-                                            <td rowspan="2">@couple.Subject.Name @couple.Teacher.FullName @couple.RoomId</td>
+                                            <td rowspan="2" class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
                                         }
                                         else if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator && !g.Denomirator &&
                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
                                         {
                                             var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day && g.Numerator &&
                                                                                            g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
-                                            <td>@couple.Subject.Name @couple.Teacher.FullName @couple.RoomId</td>
+                                            <td class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
                                         }
                                         else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && !g.Numerator && g.Denomirator &&
                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
                                         {
                                             var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
                                                                                            g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
-                                            <td>@couple.Subject.Name @couple.Teacher.FullName @couple.RoomId</td>
+                                            <td class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
                                         }
                                         else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator && g.Denomirator &&
                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))

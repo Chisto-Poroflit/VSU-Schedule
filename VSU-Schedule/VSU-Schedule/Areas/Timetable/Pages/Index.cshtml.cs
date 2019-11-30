@@ -53,6 +53,11 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .Select(s => s.Teacher).ToList());
         }
 
+        public async Task OnDelete(int coupleId)
+        {
+
+        }
+
         public class InputModel
         {
             public int GroupId { get; set; }

@@ -21,7 +21,7 @@ namespace VSU_Schedule.Areas.Teachers.Pages
         {
             _context = context;
             Subjects = _context.Subjects.ToList();
-            TeacherSubjects = _context.TeacherSubject.ToList();
+            //TeacherSubjects = _context.TeacherSubject.ToList();
         }
 
         public IActionResult OnGet()
@@ -33,7 +33,7 @@ namespace VSU_Schedule.Areas.Teachers.Pages
         public Teacher Teacher { get; set; }
         [BindProperty]
         public IList<Subject> Subjects { get; set; }
-        public IList<TeacherSubject> TeacherSubjects { get; set; }
+        //public IList<TeacherSubject> TeacherSubjects { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -44,14 +44,14 @@ namespace VSU_Schedule.Areas.Teachers.Pages
 
             _context.Teachers.Add(Teacher);
             await _context.SaveChangesAsync();
-            Teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.FullName == Teacher.FullName );
+            //Teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.FullName == Teacher.FullName );
             //foreach (var elem in Subjects)
             //{
             //    if(elem.ForTeacher)
             //        TeacherSubjects.Add(new TeacherSubject() { SubjectId = elem.Id, TeacherId = Teacher.Id });
             //}
+           // TeacherSubjects.AddRange(Subjects.Where(s => s.ForTeacher).Select(s => new TeacherSubject() { SubjectId = s.Id, TeacherId = Teacher.Id }));
             _context.TeacherSubject.AddRange(Subjects.Where(s => s.ForTeacher).Select(s => new TeacherSubject() { SubjectId = s.Id, TeacherId = Teacher.Id }));
-            _context.TeacherSubject.AddRange(TeacherSubjects);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
