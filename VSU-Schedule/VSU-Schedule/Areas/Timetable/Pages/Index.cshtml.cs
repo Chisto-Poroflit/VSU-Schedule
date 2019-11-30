@@ -53,9 +53,32 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .Select(s => s.Teacher).ToList());
         }
 
-        public async Task OnDelete(int coupleId)
+        public async Task<IActionResult> OnPostDeleteAsync()
         {
+            var input = Input;
+            bool num = false, denum = false;
+            if (input.NumAndDenum)
+            {
+                num = true;
+                denum = true;
+            }
+            else if (!input.NumAndDenum && input.NumOrDenum == 0)
+            {
+                num = true;
+            }
+            else
+            {
+                denum = true;
+            }
+            _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
+                g.Day == input.Day
+                && g.Numerator == num 
+                && g.Denomirator == denum
+                && g.ParaId == input.ParaId
+                && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)));
 
+            await _context.SaveChangesAsync();
+            return RedirectToPage("./Index");
         }
 
         public class InputModel
