@@ -244,14 +244,15 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 denum = true;
             }
 
-            Couples = _context.Couples
-                .Include(g => g.Teacher)
-                .Include(g => g.Subject)
-                .Include(g => g.CoupleGroups)
-                .ThenInclude(g => g.Group)
-                .ToList();
+            //Couples = _context.Couples
+            //    .Include(g => g.Teacher)
+            //    .Include(g => g.Subject)
+            //    .Include(g => g.CoupleGroups)
+            //    .ThenInclude(g => g.Group)
+            //    .ToList();
+            var gr = _context.Groups.FirstOrDefault(g => g.Id == input.GroupId);
 
-            if (Couples.Any(g =>
+            if (_context.Couples.Any(g =>
                 g.Day == input.Day && g.Numerator == num && g.Denomirator == denum && g.ParaId == input.ParaId &&
                 g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
             {
@@ -259,12 +260,11 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     g.Day == input.Day && g.Numerator == num && g.Denomirator == denum && g.ParaId == input.ParaId
                     && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
 
-
                 var couplegroups = existCouple.CoupleGroups.ToList();
 
                 if (couplegroups.Count() > 1)
                 {
-                    var couplegroup = couplegroups.Where(g => g.GroupId == input.GroupId);
+                    var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == input.GroupId);
                     _context.Remove(couplegroup);
 
                     var newCouple = new Couple
@@ -295,12 +295,34 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     existCouple.SubjectId = input.SubjectId;
                     existCouple.RoomId = input.RoomId;
 
-                    
+
 
                     _context.Couples.Update(existCouple);
                     _context.SaveChanges();
                 }
             }
+
+            else if (_context.Couples.Any(g =>
+                 g.Day == input.Day && g.Numerator == num
+                 && g.Denomirator == denum && g.ParaId == input.ParaId &&
+                 g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                 && (g.RoomId == input.RoomId || g.TeacherId == input.TeacherId)))
+            {
+                var coup = _context.Couples.FirstOrDefault(g =>
+                g.Day == input.Day && g.Numerator == num
+                && g.Denomirator == denum && g.ParaId == input.ParaId &&
+                g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                && (g.RoomId == input.RoomId || g.TeacherId == input.TeacherId));
+
+                if (coup.RoomId != input.RoomId || coup.TeacherId != input.TeacherId || coup.SubjectId != input.SubjectId)
+                    return RedirectToPage("./Index");
+                else
+                {
+                    _context.CoupleGroups.Add(new CoupleGroup { CoupleId = coup.Id, GroupId = input.GroupId });
+                    _context.SaveChanges();
+                }
+            }
+
             else
             {
                 var couple = new Couple()
@@ -319,12 +341,12 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 var numdenumCouple = _context.Couples.FirstOrDefault(g =>
                     g.Day == input.Day && g.Numerator && g.Denomirator && g.ParaId == input.ParaId
                     && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
-                if (numdenumCouple != null)
-                {
-                    numdenumCouple.Numerator = !num;
-                    numdenumCouple.Denomirator = !denum;
-                    _context.Couples.Update(numdenumCouple);
-                }
+                //if (numdenumCouple != null)
+                //{
+                //    numdenumCouple.Numerator = !num;
+                //    numdenumCouple.Denomirator = !denum;
+                //    _context.Couples.Update(numdenumCouple);
+                //}
 
                 var couplegroup = new CoupleGroup()
                 {

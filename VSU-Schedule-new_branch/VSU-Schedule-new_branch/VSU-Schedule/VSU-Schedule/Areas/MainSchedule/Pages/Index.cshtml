@@ -47,11 +47,11 @@
                 <tbody>
 
                     @for (int day = 1; day <= 6; day++)
-                    {                                             
+                    {
                         <tr>
                             <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
                         </tr>
-                        
+
                         @foreach (var para in Model.Para)
                         {
                             for (int numdenum = 0; numdenum < 2; numdenum++)
@@ -95,7 +95,7 @@
                                 </tr>
                             }
                         }
-                        
+
                     }
                 </tbody>
             </table>
@@ -106,3 +106,4 @@
         </div>
     }
 </div>
+
