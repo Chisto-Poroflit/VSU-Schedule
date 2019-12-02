@@ -55,17 +55,16 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var input = Input;
             bool num = false, denum = false;
 
-            if (input.NumOrDenum == 0)
+            if (Input.NumOrDenum == 0)
             {
                 num = true;
                 if (!_context.Couples.Any(g =>
-                 g.Day == input.Day
-                 && g.Numerator == num
-                 && g.ParaId == input.ParaId
-                 && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
+                    g.Day == Input.Day
+                    && g.Numerator == num
+                    && g.ParaId == Input.ParaId
+                    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
                     return Page();
             }
 
@@ -73,32 +72,33 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             {
                 denum = true;
                 if (!_context.Couples.Any(g =>
-                 g.Day == input.Day
-                 && g.Denomirator == denum
-                 && g.ParaId == input.ParaId
-                 && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
+                    g.Day == Input.Day
+                    && g.Denomirator == denum
+                    && g.ParaId == Input.ParaId
+                    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
                     return Page();
             }
+
             Couple coup;
 
             if (_context.Couples.Any(g =>
-                 g.Day == input.Day
-                 && g.Numerator == num
-                 && g.Denomirator == denum
-                 && g.ParaId == input.ParaId
-                 && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
-            {
-                coup = _context.Couples.FirstOrDefault(g =>
-                g.Day == input.Day
+                g.Day == Input.Day
                 && g.Numerator == num
                 && g.Denomirator == denum
-                && g.ParaId == input.ParaId
-                && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
+                && g.ParaId == Input.ParaId
+                && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
+            {
+                coup = _context.Couples.FirstOrDefault(g =>
+                    g.Day == Input.Day
+                    && g.Numerator == num
+                    && g.Denomirator == denum
+                    && g.ParaId == Input.ParaId
+                    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
 
                 if (_context.CoupleGroups.Count(g => g.CoupleId == coup.Id) > 1)
                 {
                     _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g =>
-                        g.CoupleId == coup.Id && g.GroupId == input.GroupId));
+                        g.CoupleId == coup.Id && g.GroupId == Input.GroupId));
                 }
 
                 else
@@ -111,19 +111,19 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             else
             {
                 coup = _context.Couples.FirstOrDefault(g =>
-                g.Day == input.Day
-                && g.Numerator == true
-                && g.Denomirator == true
-                && g.ParaId == input.ParaId
-                && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
+                    g.Day == Input.Day
+                    && g.Numerator == true
+                    && g.Denomirator == true
+                    && g.ParaId == Input.ParaId
+                    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
 
                 if (_context.CoupleGroups.Count(g => g.CoupleId == coup.Id) > 1)
                 {
                     _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g =>
-                        g.CoupleId == coup.Id && g.GroupId == input.GroupId));
+                        g.CoupleId == coup.Id && g.GroupId == Input.GroupId));
                 }
 
-                else if (input.NumAndDenum)
+                else if (Input.NumAndDenum)
                 {
                     _context.Couples.Remove(coup);
                 }
@@ -138,7 +138,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             //if (coup.CoupleGroups.Count() > 1)
             //{
             //    _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g =>
-            //        g.CoupleId == coup.Id && g.GroupId == input.GroupId));
+            //        g.CoupleId == coup.Id && g.GroupId == Input.GroupId));
             //}
 
             //else
@@ -147,56 +147,56 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             //}
 
 
-            //if (input.NumAndDenum)
+            //if (Input.NumAndDenum)
             //{
             //    if(_context.Couples.Any(g =>
-            //    g.Day == input.Day
+            //    g.Day == Input.Day
             //    && g.Numerator == true
             //    && g.Denomirator == true
-            //    && g.ParaId == input.ParaId
-            //    && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
+            //    && g.ParaId == Input.ParaId
+            //    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
             //    {
             //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //            g.Day == input.Day
+            //            g.Day == Input.Day
             //            && g.Numerator == true
             //            && g.Denomirator == true
-            //            && g.ParaId == input.ParaId
-            //            && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)));
+            //            && g.ParaId == Input.ParaId
+            //            && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
             //    }
             //    else
             //    {                    
             //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //            g.Day == input.Day
+            //            g.Day == Input.Day
             //            && g.Numerator == num
             //            && g.Denomirator == denum
-            //            && g.ParaId == input.ParaId
-            //            && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)));
+            //            && g.ParaId == Input.ParaId
+            //            && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
             //    }
             //}
             //else
             //{
             //    if (_context.Couples.Any(g =>
-            //     g.Day == input.Day
+            //     g.Day == Input.Day
             //     && g.Numerator == num
             //     && g.Denomirator == denum
-            //     && g.ParaId == input.ParaId
-            //     && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
+            //     && g.ParaId == Input.ParaId
+            //     && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
             //    {
             //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //          g.Day == input.Day
+            //          g.Day == Input.Day
             //          && g.Numerator == num
             //          && g.Denomirator == denum
-            //          && g.ParaId == input.ParaId
-            //          && g.CoupleGroups.Any(s => s.GroupId == input.GroupId)));
+            //          && g.ParaId == Input.ParaId
+            //          && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
             //    }
             //    else
             //    {
             //        var coup = _context.Couples.FirstOrDefault(g =>
-            //          g.Day == input.Day
+            //          g.Day == Input.Day
             //          && g.Numerator == true
             //          && g.Denomirator == true
-            //          && g.ParaId == input.ParaId
-            //          && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
+            //          && g.ParaId == Input.ParaId
+            //          && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
             //        coup.Denomirator = !denum;
             //        coup.Numerator = !num;
             //        _context.Couples.Update(coup);
@@ -228,14 +228,13 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 return Page();
             }
 
-            var input = Input;
             bool num = false, denum = false;
-            if (input.NumAndDenum)
+            if (Input.NumAndDenum)
             {
                 num = true;
                 denum = true;
             }
-            else if (!input.NumAndDenum && input.NumOrDenum == 0)
+            else if (!Input.NumAndDenum && Input.NumOrDenum == 0)
             {
                 num = true;
             }
@@ -250,75 +249,217 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             //    .Include(g => g.CoupleGroups)
             //    .ThenInclude(g => g.Group)
             //    .ToList();
-            var gr = _context.Groups.FirstOrDefault(g => g.Id == input.GroupId);
+            var gr = _context.Groups.FirstOrDefault(g => g.Id == Input.GroupId);
+
+            //var groupCouples = gr?.CoupleGroups.Where(c=>c.Couple.Day == Input.Day && c.Couple.ParaId == Input.ParaId).ToList();
+            //if (groupCouples?.Count == 0)
+            //{
+            //    var sameCouples = _context.Couples.Where(c =>
+            //        c.Day == Input.Day &&
+            //        c.ParaId == Input.ParaId &&
+            //        c.Numerator == num &&
+            //        c.Denomirator == denum &&
+            //        c.CoupleGroups.Any(cg => cg.Group.SemesterNumber == gr.SemesterNumber) &&
+            //        c.RoomId == Input.RoomId);
+            //    if (sameCouples.Any())
+            //    {
+            //        _context.CoupleGroups.Add(new CoupleGroup()
+            //        {
+            //            CoupleId = sameCouples.First().Id,
+            //            GroupId = Input.GroupId
+            //        });
+            //    }
+            //}
+
 
             if (_context.Couples.Any(g =>
-                g.Day == input.Day && g.Numerator == num && g.Denomirator == denum && g.ParaId == input.ParaId &&
-                g.CoupleGroups.Any(s => s.GroupId == input.GroupId)))
+                g.Day == Input.Day &&
+                g.ParaId == Input.ParaId &&
+                g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
             {
-                var existCouple = _context.Couples.FirstOrDefault(g =>
-                    g.Day == input.Day && g.Numerator == num && g.Denomirator == denum && g.ParaId == input.ParaId
-                    && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
-
-                var couplegroups = existCouple.CoupleGroups.ToList();
-
-                if (couplegroups.Count() > 1)
+                var existCouples = _context.Couples
+                    .Include(c => c.CoupleGroups)
+                    .Where(g =>
+                        g.Day == Input.Day && g.ParaId == Input.ParaId
+                                           && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)).ToList();
+                if (existCouples.Any(c => c.Numerator == num && c.Denomirator == denum))
                 {
-                    var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == input.GroupId);
-                    _context.Remove(couplegroup);
+                    var co = existCouples.FirstOrDefault(g => g.Denomirator == denum && g.Numerator == num);
+                    var couplegroups = co.CoupleGroups.ToList();
 
+                    if (couplegroups.Count() > 1)
+                    {
+                        var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == Input.GroupId);
+                        _context.Remove(couplegroup);
+
+                        var newCouple = new Couple
+                        {
+                            Day = Input.Day,
+                            Denomirator = denum,
+                            Numerator = num,
+                            ParaId = Input.ParaId,
+                            RoomId = Input.RoomId,
+                            SubjectId = Input.SubjectId,
+                            TeacherId = Input.TeacherId
+                        };
+                        _context.Couples.Add(newCouple);
+                        _context.SaveChanges();
+                        _context.CoupleGroups.Add(
+                            new CoupleGroup
+                            {
+                                GroupId = Input.GroupId,
+                                CoupleId = newCouple.Id
+                            });
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        co.Numerator = num;
+                        co.Denomirator = denum;
+                        co.TeacherId = Input.TeacherId;
+                        co.SubjectId = Input.SubjectId;
+                        co.RoomId = Input.RoomId;
+
+
+                        _context.Couples.Update(co);
+                        _context.SaveChanges();
+                    }
+                }
+                else if (existCouples.Any(c => c.Numerator && c.Denomirator))
+                {
+                    var co = existCouples.FirstOrDefault(g => g.Denomirator && g.Numerator);
+                    var couplegroups = co.CoupleGroups.ToList();
+                    if (couplegroups.Count() > 1)
+                    {
+                        var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == Input.GroupId);
+                        _context.Remove(couplegroup);
+
+                        var newCouple = new Couple
+                        {
+                            Day = Input.Day,
+                            Denomirator = denum,
+                            Numerator = num,
+                            ParaId = Input.ParaId,
+                            RoomId = Input.RoomId,
+                            SubjectId = Input.SubjectId,
+                            TeacherId = Input.TeacherId
+                        };
+                        _context.Couples.Add(newCouple);
+                        _context.SaveChanges();
+                        _context.CoupleGroups.Add(
+                            new CoupleGroup
+                            {
+                                GroupId = Input.GroupId,
+                                CoupleId = newCouple.Id
+                            });
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        co.Numerator = !num;
+                        co.Denomirator = !denum;
+
+
+                        _context.Couples.Update(co);
+                        var newCouple = new Couple
+                        {
+                            Day = Input.Day,
+                            Denomirator = denum,
+                            Numerator = num,
+                            ParaId = Input.ParaId,
+                            RoomId = Input.RoomId,
+                            SubjectId = Input.SubjectId,
+                            TeacherId = Input.TeacherId
+                        };
+                        _context.Couples.Add(newCouple);
+                        _context.SaveChanges();
+                        _context.CoupleGroups.Add(new CoupleGroup
+                        {
+                            CoupleId = newCouple.Id,
+                            GroupId = Input.GroupId
+                        });
+                        _context.SaveChanges();
+                    }
+                }
+                else
+                {
                     var newCouple = new Couple
                     {
-                        Day = input.Day,
+                        Day = Input.Day,
                         Denomirator = denum,
                         Numerator = num,
-                        ParaId = input.ParaId,
-                        RoomId = input.RoomId,
-                        SubjectId = input.SubjectId,
-                        TeacherId = input.TeacherId
+                        ParaId = Input.ParaId,
+                        RoomId = Input.RoomId,
+                        SubjectId = Input.SubjectId,
+                        TeacherId = Input.TeacherId
                     };
                     _context.Couples.Add(newCouple);
                     _context.SaveChanges();
-                    _context.CoupleGroups.Add(
-                        new CoupleGroup
-                        {
-                            GroupId = input.GroupId,
-                            CoupleId = newCouple.Id
-                        });
-                    _context.SaveChanges();
+                    _context.CoupleGroups.Add(new CoupleGroup
+                    {
+                        CoupleId = newCouple.Id,
+                        GroupId = Input.GroupId
+                    });
                 }
-                else
-                {
-                    existCouple.Numerator = num;
-                    existCouple.Denomirator = denum;
-                    existCouple.TeacherId = input.TeacherId;
-                    existCouple.SubjectId = input.SubjectId;
-                    existCouple.RoomId = input.RoomId;
+                //couplegroups = existCouples.CoupleGroups.ToList();
+
+                //if (couplegroups.Count() > 1)
+                //{
+                //    var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == Input.GroupId);
+                //    _context.Remove(couplegroup);
+
+                //    var newCouple = new Couple
+                //    {
+                //        Day = Input.Day,
+                //        Denomirator = denum,
+                //        Numerator = num,
+                //        ParaId = Input.ParaId,
+                //        RoomId = Input.RoomId,
+                //        SubjectId = Input.SubjectId,
+                //        TeacherId = Input.TeacherId
+                //    };
+                //    _context.Couples.Add(newCouple);
+                //    _context.SaveChanges();
+                //    _context.CoupleGroups.Add(
+                //        new CoupleGroup
+                //        {
+                //            GroupId = Input.GroupId,
+                //            CoupleId = newCouple.Id
+                //        });
+                //    _context.SaveChanges();
+                //}
+                //else
+                //{
+                //    existCouples.Numerator = num;
+                //    existCouples.Denomirator = denum;
+                //    existCouples.TeacherId = Input.TeacherId;
+                //    existCouples.SubjectId = Input.SubjectId;
+                //    existCouples.RoomId = Input.RoomId;
 
 
-
-                    _context.Couples.Update(existCouple);
-                    _context.SaveChanges();
-                }
+                //    _context.Couples.Update(existCouples);
+                //    _context.SaveChanges();
+                //}
             }
 
             else if (_context.Couples.Any(g =>
-                 g.Day == input.Day && g.Numerator == num
-                 && g.Denomirator == denum && g.ParaId == input.ParaId &&
-                 g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
-                 && (g.RoomId == input.RoomId || g.TeacherId == input.TeacherId)))
+                g.Day == Input.Day && g.Numerator == num
+                                   && g.Denomirator == denum && g.ParaId == Input.ParaId &&
+                                   g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                                   && (g.RoomId == Input.RoomId || g.TeacherId == Input.TeacherId)))
             {
                 var coup = _context.Couples.FirstOrDefault(g =>
-                g.Day == input.Day && g.Numerator == num
-                && g.Denomirator == denum && g.ParaId == input.ParaId &&
-                g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
-                && (g.RoomId == input.RoomId || g.TeacherId == input.TeacherId));
+                    g.Day == Input.Day && g.Numerator == num
+                                       && g.Denomirator == denum && g.ParaId == Input.ParaId &&
+                                       g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                                       && (g.RoomId == Input.RoomId || g.TeacherId == Input.TeacherId));
 
-                if (coup.RoomId != input.RoomId || coup.TeacherId != input.TeacherId || coup.SubjectId != input.SubjectId)
+                if (coup.RoomId != Input.RoomId || coup.TeacherId != Input.TeacherId ||
+                    coup.SubjectId != Input.SubjectId)
                     return RedirectToPage("./Index");
                 else
                 {
-                    _context.CoupleGroups.Add(new CoupleGroup { CoupleId = coup.Id, GroupId = input.GroupId });
+                    _context.CoupleGroups.Add(new CoupleGroup {CoupleId = coup.Id, GroupId = Input.GroupId});
                     _context.SaveChanges();
                 }
             }
@@ -327,20 +468,20 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             {
                 var couple = new Couple()
                 {
-                    Day = input.Day,
+                    Day = Input.Day,
                     Denomirator = denum,
                     Numerator = num,
-                    ParaId = input.ParaId,
-                    RoomId = input.RoomId,
-                    SubjectId = input.SubjectId,
-                    TeacherId = input.TeacherId
+                    ParaId = Input.ParaId,
+                    RoomId = Input.RoomId,
+                    SubjectId = Input.SubjectId,
+                    TeacherId = Input.TeacherId
                 };
                 _context.Couples.Add(couple);
                 _context.SaveChanges();
 
                 var numdenumCouple = _context.Couples.FirstOrDefault(g =>
-                    g.Day == input.Day && g.Numerator && g.Denomirator && g.ParaId == input.ParaId
-                    && g.CoupleGroups.Any(s => s.GroupId == input.GroupId));
+                    g.Day == Input.Day && g.Numerator && g.Denomirator && g.ParaId == Input.ParaId
+                    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
                 //if (numdenumCouple != null)
                 //{
                 //    numdenumCouple.Numerator = !num;
@@ -350,7 +491,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
                 var couplegroup = new CoupleGroup()
                 {
-                    GroupId = input.GroupId,
+                    GroupId = Input.GroupId,
                     CoupleId = couple.Id
                 };
                 _context.CoupleGroups.Add(couplegroup);
