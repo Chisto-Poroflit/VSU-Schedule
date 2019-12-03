@@ -354,6 +354,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                             });
                         _context.SaveChanges();
                     }
+                    //else if(denum && num)
                     else
                     {
                         co.Numerator = !num;
@@ -383,6 +384,22 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 }
                 else
                 {
+                    if (num && denum && existCouples.Count > 0)
+                    {
+                        foreach (var existCouple in existCouples)
+                        {
+                            if (existCouple.CoupleGroups.Count > 1)
+                            {
+                                _context.CoupleGroups.Remove(existCouple.CoupleGroups.FirstOrDefault(cg => cg.GroupId == gr.Id));
+                            }
+                            else
+                            {
+                                _context.Couples.Remove(existCouple);
+                            }
+                        }
+
+                        _context.SaveChanges();
+                    }
                     var newCouple = new Couple
                     {
                         Day = Input.Day,
@@ -400,6 +417,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                         CoupleId = newCouple.Id,
                         GroupId = Input.GroupId
                     });
+                    _context.SaveChanges();
                 }
                 //couplegroups = existCouples.CoupleGroups.ToList();
 
