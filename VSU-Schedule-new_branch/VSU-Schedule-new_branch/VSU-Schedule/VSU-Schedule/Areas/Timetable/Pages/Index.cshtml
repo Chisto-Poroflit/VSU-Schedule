@@ -93,8 +93,9 @@
                                     {
                                         var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
                                                                                         g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Numerator);
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-secondary w-100" data-toggle="modal" data-target="#exampleModal"
+                                        <td>
+                                            <div class="d-inline-block">
+                                            <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
                                                     data-group="@group.Id"
                                                     data-para="@para.Number"
                                                     data-day="@day"
@@ -109,6 +110,17 @@
                                                 <h5>@couple.Subject.Name</h5>
                                                 @couple.Teacher.FullName @couple.RoomId
                                             </button>
+                                            </div>
+                                            
+                                            <div class="d-inline-block">
+                                                <form method="post">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy"
+                                                            data-day="@day">
+                                                        S
+                                                    </button>
+                                                </form>
+                                            </div>
+                                                
                                         </td>
                                     }
                                     else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
@@ -116,7 +128,8 @@
                                     {
                                         var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
                                                                                         g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Denomirator);
-                                        <td class="text-center">
+                                        <td>
+                                            <div class="d-inline-block">
                                             <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
                                                     data-group="@group.Id"
                                                     data-para="@para.Number"
@@ -131,6 +144,17 @@
                                                 <h5>@couple.Subject.Name</h5>
                                                 @couple.Teacher.FullName @couple.RoomId
                                             </button>
+                                                </div>
+                                            
+                                            <div class="d-inline-block">
+                                                <form method="post">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy"
+                                                           data-day="@day" >
+                                                        S
+                                                    </button>
+                                                </form>
+                                            </div>
+                                                
                                         </td>
                                     }
                                     else
@@ -164,6 +188,7 @@
             </table>
         </div>
     }
+    <input type="hidden" asp-for="Input.Day" id="dayNumber">
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -297,6 +322,12 @@
             setTeacher(button.data("teacher-name"), button.data("teacher-id"));
             //modal.find('.modal-body input').val(recipient)
         });
+
+    function setItems(event) {
+        var button = $(event.relatedTarget);
+        var day = button.data('day');
+        $('#dayNumber').val(day);
+    }
 
     function setRoom(roomNumber) {
         $('#room-select-button').html(roomNumber);

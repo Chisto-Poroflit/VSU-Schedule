@@ -53,6 +53,12 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .Select(s => s.Teacher).ToList());
         }
 
+        public async Task<IActionResult> OnPostCopyAsync()
+        {
+            var input = Input;
+            int i = 1;
+            return RedirectToPage("./Index");
+        }
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             bool num = false, denum = false;
@@ -135,73 +141,6 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     _context.Couples.Update(coup);
                 }
             }
-            //if (coup.CoupleGroups.Count() > 1)
-            //{
-            //    _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g =>
-            //        g.CoupleId == coup.Id && g.GroupId == Input.GroupId));
-            //}
-
-            //else
-            //{
-            //    _context.Couples.Remove(coup);
-            //}
-
-
-            //if (Input.NumAndDenum)
-            //{
-            //    if(_context.Couples.Any(g =>
-            //    g.Day == Input.Day
-            //    && g.Numerator == true
-            //    && g.Denomirator == true
-            //    && g.ParaId == Input.ParaId
-            //    && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
-            //    {
-            //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //            g.Day == Input.Day
-            //            && g.Numerator == true
-            //            && g.Denomirator == true
-            //            && g.ParaId == Input.ParaId
-            //            && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
-            //    }
-            //    else
-            //    {                    
-            //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //            g.Day == Input.Day
-            //            && g.Numerator == num
-            //            && g.Denomirator == denum
-            //            && g.ParaId == Input.ParaId
-            //            && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
-            //    }
-            //}
-            //else
-            //{
-            //    if (_context.Couples.Any(g =>
-            //     g.Day == Input.Day
-            //     && g.Numerator == num
-            //     && g.Denomirator == denum
-            //     && g.ParaId == Input.ParaId
-            //     && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
-            //    {
-            //        _context.Couples.Remove(await _context.Couples.FirstOrDefaultAsync(g =>
-            //          g.Day == Input.Day
-            //          && g.Numerator == num
-            //          && g.Denomirator == denum
-            //          && g.ParaId == Input.ParaId
-            //          && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)));
-            //    }
-            //    else
-            //    {
-            //        var coup = _context.Couples.FirstOrDefault(g =>
-            //          g.Day == Input.Day
-            //          && g.Numerator == true
-            //          && g.Denomirator == true
-            //          && g.ParaId == Input.ParaId
-            //          && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
-            //        coup.Denomirator = !denum;
-            //        coup.Numerator = !num;
-            //        _context.Couples.Update(coup);
-            //    }
-            //}
 
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
@@ -243,34 +182,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 denum = true;
             }
 
-            //Couples = _context.Couples
-            //    .Include(g => g.Teacher)
-            //    .Include(g => g.Subject)
-            //    .Include(g => g.CoupleGroups)
-            //    .ThenInclude(g => g.Group)
-            //    .ToList();
             var gr = _context.Groups.FirstOrDefault(g => g.Id == Input.GroupId);
-
-            //var groupCouples = gr?.CoupleGroups.Where(c=>c.Couple.Day == Input.Day && c.Couple.ParaId == Input.ParaId).ToList();
-            //if (groupCouples?.Count == 0)
-            //{
-            //    var sameCouples = _context.Couples.Where(c =>
-            //        c.Day == Input.Day &&
-            //        c.ParaId == Input.ParaId &&
-            //        c.Numerator == num &&
-            //        c.Denomirator == denum &&
-            //        c.CoupleGroups.Any(cg => cg.Group.SemesterNumber == gr.SemesterNumber) &&
-            //        c.RoomId == Input.RoomId);
-            //    if (sameCouples.Any())
-            //    {
-            //        _context.CoupleGroups.Add(new CoupleGroup()
-            //        {
-            //            CoupleId = sameCouples.First().Id,
-            //            GroupId = Input.GroupId
-            //        });
-            //    }
-            //}
-
 
             if (_context.Couples.Any(g =>
                 g.Day == Input.Day &&
@@ -354,7 +266,6 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                             });
                         _context.SaveChanges();
                     }
-                    //else if(denum && num)
                     else
                     {
                         co.Numerator = !num;
@@ -419,45 +330,6 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     });
                     _context.SaveChanges();
                 }
-                //couplegroups = existCouples.CoupleGroups.ToList();
-
-                //if (couplegroups.Count() > 1)
-                //{
-                //    var couplegroup = couplegroups.FirstOrDefault(g => g.GroupId == Input.GroupId);
-                //    _context.Remove(couplegroup);
-
-                //    var newCouple = new Couple
-                //    {
-                //        Day = Input.Day,
-                //        Denomirator = denum,
-                //        Numerator = num,
-                //        ParaId = Input.ParaId,
-                //        RoomId = Input.RoomId,
-                //        SubjectId = Input.SubjectId,
-                //        TeacherId = Input.TeacherId
-                //    };
-                //    _context.Couples.Add(newCouple);
-                //    _context.SaveChanges();
-                //    _context.CoupleGroups.Add(
-                //        new CoupleGroup
-                //        {
-                //            GroupId = Input.GroupId,
-                //            CoupleId = newCouple.Id
-                //        });
-                //    _context.SaveChanges();
-                //}
-                //else
-                //{
-                //    existCouples.Numerator = num;
-                //    existCouples.Denomirator = denum;
-                //    existCouples.TeacherId = Input.TeacherId;
-                //    existCouples.SubjectId = Input.SubjectId;
-                //    existCouples.RoomId = Input.RoomId;
-
-
-                //    _context.Couples.Update(existCouples);
-                //    _context.SaveChanges();
-                //}
             }
 
             else if (_context.Couples.Any(g =>
@@ -500,12 +372,6 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 var numdenumCouple = _context.Couples.FirstOrDefault(g =>
                     g.Day == Input.Day && g.Numerator && g.Denomirator && g.ParaId == Input.ParaId
                     && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId));
-                //if (numdenumCouple != null)
-                //{
-                //    numdenumCouple.Numerator = !num;
-                //    numdenumCouple.Denomirator = !denum;
-                //    _context.Couples.Update(numdenumCouple);
-                //}
 
                 var couplegroup = new CoupleGroup()
                 {
