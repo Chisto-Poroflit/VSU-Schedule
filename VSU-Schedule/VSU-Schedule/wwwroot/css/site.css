@@ -34,11 +34,18 @@ button.accept-policy {
   line-height: inherit;
 }
 
+.timetable-arrow {
+    opacity: 0.5;
+}
+timetable-arrow:hover {
+    opacity: 1;
+    transition-duration: 0.5s;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {

@@ -18,14 +18,14 @@
         padding: 0 5px 5px 5px;
         border-bottom: 1px solid #ddd;
     }
+
     .add-btn {
         opacity: 0.25;
         transition-duration: 0.25s;
         transition-property: opacity;
     }
-    .add-btn:hover {
-        opacity: 1 !important;
-    }
+
+    .add-btn:hover { opacity: 1 !important; }
 </style>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
@@ -94,26 +94,25 @@
                                         var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
                                                                                         g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Numerator);
                                         <td>
-                                            <div class="d-inline-block">
-                                            <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
-                                                    data-group="@group.Id"
-                                                    data-para="@para.Number"
-                                                    data-day="@day"
-                                                    data-numdenum="@numdenum"
-                                                    data-room="@couple.Room.Number"
-                                                    data-subject-name="@couple.Subject.Name"
-                                                    data-subject-id="@couple.Subject.Id"
-                                                    data-teacher-name="@couple.Teacher.FullName"
-                                                    data-teacher-id="@couple.Teacher.Id"
+                                            <form method="post">
+                                                <div class="btn-group" role="group">
 
-                                                    data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
-                                                <h5>@couple.Subject.Name</h5>
-                                                @couple.Teacher.FullName @couple.RoomId
-                                            </button>
-                                            </div>
-                                            
-                                            <div class="d-inline-block">
-                                                <form method="post">
+                                                    <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
+                                                            data-group="@group.Id"
+                                                            data-para="@para.Number"
+                                                            data-day="@day"
+                                                            data-numdenum="@numdenum"
+                                                            data-room="@couple.Room.Number"
+                                                            data-subject-name="@couple.Subject.Name"
+                                                            data-subject-id="@couple.Subject.Id"
+                                                            data-teacher-name="@couple.Teacher.FullName"
+                                                            data-teacher-id="@couple.Teacher.Id"
+                                                            data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
+                                                        <h5>@couple.Subject.Name</h5>
+                                                        @couple.Teacher.FullName @couple.RoomId
+                                                    </button>
+
+
                                                     <input type="hidden" asp-for="Input.Day" value="@day">
                                                     <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
                                                     <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
@@ -121,12 +120,11 @@
                                                     <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
                                                     <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
                                                     <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
-                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
-                                                        S
+                                                    <button type="submit" class="btn btn-outline-primary" title="Копировать" asp-page-handler="Copy">
+                                                        <i class="fa fa-arrow-right timetable-arrow"></i>
                                                     </button>
-                                                </form>
-                                            </div>
-                                                
+                                                </div>
+                                            </form>
                                         </td>
                                     }
                                     else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
@@ -135,25 +133,24 @@
                                         var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
                                                                                         g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Denomirator);
                                         <td>
-                                            <div class="d-inline-block">
-                                            <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
-                                                    data-group="@group.Id"
-                                                    data-para="@para.Number"
-                                                    data-day="@day"
-                                                    data-numdenum="@numdenum"
-                                                    data-room="@couple.Room.Number"
-                                                    data-subject-name="@couple.Subject.Name"
-                                                    data-subject-id="@couple.Subject.Id"
-                                                    data-teacher-name="@couple.Teacher.FullName"
-                                                    data-teacher-id="@couple.Teacher.Id"
-                                                    data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
-                                                <h5>@couple.Subject.Name</h5>
-                                                @couple.Teacher.FullName @couple.RoomId
-                                            </button>
-                                                </div>
-                                            
-                                            <div class="d-inline-block">
-                                                <form method="post">
+                                            <form method="post">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
+                                                            data-group="@group.Id"
+                                                            data-para="@para.Number"
+                                                            data-day="@day"
+                                                            data-numdenum="@numdenum"
+                                                            data-room="@couple.Room.Number"
+                                                            data-subject-name="@couple.Subject.Name"
+                                                            data-subject-id="@couple.Subject.Id"
+                                                            data-teacher-name="@couple.Teacher.FullName"
+                                                            data-teacher-id="@couple.Teacher.Id"
+                                                            data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
+                                                        <h5>@couple.Subject.Name</h5>
+                                                        @couple.Teacher.FullName @couple.RoomId
+                                                    </button>
+
+
                                                     <input type="hidden" asp-for="Input.Day" value="@day">
                                                     <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
                                                     <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
@@ -161,12 +158,12 @@
                                                     <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
                                                     <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
                                                     <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
-                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
-                                                        <i class="fa fa-a"></i>
+                                                    <button type="submit" class="btn btn-outline-primary" title="Копировать" asp-page-handler="Copy">
+                                                        <i class="fa fa-arrow-right timetable-arrow"></i>
                                                     </button>
-                                                </form>
-                                            </div>
-                                                
+
+                                                </div>
+                                            </form>
                                         </td>
                                     }
                                     else
@@ -199,7 +196,7 @@
                 </tbody>
             </table>
         </div>
-    }    
+    }
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -284,7 +281,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-4 offset-4">
-                                
+
                             </div>
                         </div>
                         <div class="custom-control custom-checkbox">
