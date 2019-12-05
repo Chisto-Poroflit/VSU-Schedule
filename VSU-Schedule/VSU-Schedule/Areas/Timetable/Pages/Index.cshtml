@@ -1,0 +1,408 @@
+﻿@page
+@using System.Globalization
+@model VSU_Schedule.Areas.Timetable.Pages.IndexModel
+@{
+    ViewData["Title"] = "Расписание";
+    var rowSpan = Model.Para.Count * 2 + 1;
+    bool activeSemesterTab = true;
+    bool activeSemesterPage = true;
+}
+<style>
+    ul.dropdown-search-box {
+        max-height: 300px;
+        width: 270px;
+        overflow-y: auto;
+    }
+
+    ul.dropdown-search-box .search-box {
+        padding: 0 5px 5px 5px;
+        border-bottom: 1px solid #ddd;
+    }
+    .add-btn {
+        opacity: 0.25;
+        transition-duration: 0.25s;
+        transition-property: opacity;
+    }
+    .add-btn:hover {
+        opacity: 1 !important;
+    }
+</style>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterTab ? "active" : "";
+
+        <li class="nav-item">
+            <a class="nav-link @active" id="@semGroups.Key-tab" data-toggle="tab" href="#sem-@semGroups.Key" role="tab" aria-controls="@semGroups.Key" aria-selected="@activeSemesterTab">@semGroups.Key семестр</a>
+        </li>
+        activeSemesterTab = false;
+    }
+</ul>
+@foreach (var sem in Model.TeacherSubjects.GroupBy(g => g.Subject.Semester))
+{
+    var active = activeSemesterPage ? "show active" : "";
+
+    activeSemesterTab = false;
+}
+<div class="tab-content" id="myTabContent">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterPage ? "show active" : "";
+        activeSemesterPage = false;
+        <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col" colspan="2" rowspan="2"></th>
+                    @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).GroupBy(g => g.GroupNumber))
+                    {
+                        var subgroupsCount = group.Count();
+
+                        <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
+                    }
+                </tr>
+                <tr>
+
+                    @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber))
+                    {
+                        <th scope="col" class="text-center">@group.SubgroupNumber</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+
+                @for (int day = 1; day <= 6; day++)
+                {
+                    <tr>
+                        <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
+                    </tr>
+
+                    @foreach (var para in Model.Para)
+                    {
+                        @for (int numdenum = 0; numdenum < 2; numdenum++)
+                        {
+                            <tr>
+                                @if (numdenum == 0)
+                                {
+                                    <td rowspan="2">@para.StartTime - @para.EndTime</td>
+                                }
+                                @foreach (var group in semGroups)
+                                {
+                                    if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator &&
+                                                                                 g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                    {
+                                        var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
+                                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Numerator);
+                                        <td>
+                                            <div class="d-inline-block">
+                                            <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
+                                                    data-group="@group.Id"
+                                                    data-para="@para.Number"
+                                                    data-day="@day"
+                                                    data-numdenum="@numdenum"
+                                                    data-room="@couple.Room.Number"
+                                                    data-subject-name="@couple.Subject.Name"
+                                                    data-subject-id="@couple.Subject.Id"
+                                                    data-teacher-name="@couple.Teacher.FullName"
+                                                    data-teacher-id="@couple.Teacher.Id"
+
+                                                    data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
+                                                <h5>@couple.Subject.Name</h5>
+                                                @couple.Teacher.FullName @couple.RoomId
+                                            </button>
+                                            </div>
+                                            
+                                            <div class="d-inline-block">
+                                                <form method="post">
+                                                    <input type="hidden" asp-for="Input.Day" value="@day">
+                                                    <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
+                                                    <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
+                                                    <input type="hidden" asp-for="Input.RoomId" value="@couple.Room.Number">
+                                                    <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
+                                                    <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
+                                                    <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
+                                                        S
+                                                    </button>
+                                                </form>
+                                            </div>
+                                                
+                                        </td>
+                                    }
+                                    else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
+                                                                                      g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                    {
+                                        var couple = @Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
+                                                                                        g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id) && g.Denomirator);
+                                        <td>
+                                            <div class="d-inline-block">
+                                            <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal"
+                                                    data-group="@group.Id"
+                                                    data-para="@para.Number"
+                                                    data-day="@day"
+                                                    data-numdenum="@numdenum"
+                                                    data-room="@couple.Room.Number"
+                                                    data-subject-name="@couple.Subject.Name"
+                                                    data-subject-id="@couple.Subject.Id"
+                                                    data-teacher-name="@couple.Teacher.FullName"
+                                                    data-teacher-id="@couple.Teacher.Id"
+                                                    data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Изменить">
+                                                <h5>@couple.Subject.Name</h5>
+                                                @couple.Teacher.FullName @couple.RoomId
+                                            </button>
+                                                </div>
+                                            
+                                            <div class="d-inline-block">
+                                                <form method="post">
+                                                    <input type="hidden" asp-for="Input.Day" value="@day">
+                                                    <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
+                                                    <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
+                                                    <input type="hidden" asp-for="Input.RoomId" value="@couple.Room.Number">
+                                                    <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
+                                                    <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
+                                                    <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
+                                                        <i class="fa fa-a"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                                
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-secondary w-100 add-btn" data-toggle="modal" data-target="#exampleModal"
+                                                    data-group="@group.Id"
+                                                    data-para="@para.Number"
+                                                    data-day="@day"
+                                                    data-numdenum="@numdenum"
+                                                    data-room="Выбрать"
+                                                    data-subject-name="Выбрать"
+                                                    data-subject-id=""
+                                                    data-teacher-name="Выбрать"
+                                                    data-teacher-id=""
+                                                    data-whatever="@group.GroupNumber.@group.SubgroupNumber, @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day], @para.StartTime-@para.EndTime" title="Добавить">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                }
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    }    
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление занятия</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="recipient-name" class="col-form-label">Предмет</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex" id="subj-select">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="subj-select-button" data-toggle="dropdown">
+                                        Выбрать
+                                    </button>
+                                    <input type="hidden" id="subjectId" asp-for="Input.SubjectId"/>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subj-dropdown">
+                                        <li role="presentation" class="search-box">
+                                            <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subj-dropdown'))"/>
+                                        </li>
+                                        @foreach (var subject in Model.Subjects)
+                                        {
+                                            <li role="presentation" class="dropdown-item" onclick="setSubject('@subject.Name', @subject.Id)">@subject.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Преподаватель</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex" id="teacher-select">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="teacher-select-button" data-toggle="dropdown" onclick="subjectSelected()">
+                                        Выбрать
+                                    </button>
+                                    <input type="hidden" id="teacherId" asp-for="Input.TeacherId"/>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="teacher-dropdown">
+                                        <li role="presentation" class="search-box">
+                                            <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label">Аудитория</label>
+                            </div>
+                            <div class="col-4">
+                                <div class="dropdown d-flex">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="room-select-button" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать
+                                        <span class="caret"></span>
+                                    </button>
+                                    <input type="hidden" id="roomId" asp-for="Input.RoomId"/>
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="room-dropdown">
+                                        <li role="presentation" class="search-box">
+                                            <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#room-dropdown'))"/>
+                                        </li>
+                                        @foreach (var room in Model.Rooms)
+                                        {
+                                            <li role="presentation" class="dropdown-item" onclick="setRoom(@room.Number)">@room.Number</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4 offset-4">
+                                
+                            </div>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" asp-for="Input.NumAndDenum">
+                            <label class="custom-control-label" asp-for="Input.NumAndDenum">Числитель и Знаменатель</label>
+                        </div>
+                    </div>
+                </div>
+
+                <input id="numordenum" asp-for="Input.NumOrDenum" type="hidden">
+                <input id="dayId" asp-for="Input.Day" type="hidden">
+                <input id="paraId" asp-for="Input.ParaId" type="hidden">
+                <input id="groupId" asp-for="Input.GroupId" type="hidden">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" asp-page-handler="Delete">Удалить занятие</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">ОК</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    $('#exampleModal').on('show.bs.modal',
+        function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var recipient = button.data('whatever'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var groupId = button.data('group');
+            var paraId = button.data('para');
+            var day = button.data('day');
+            var numdenum = button.data('numdenum');
+            var modal = $(this);
+            modal.find('.modal-title').text('Группа ' + recipient);
+            modal.find('#groupId').val(groupId);
+            modal.find('#paraId').val(paraId);
+            modal.find('#dayId').val(day);
+            modal.find('#numordenum').val(numdenum);
+
+            setRoom(button.data("room"));
+            setSubject(button.data("subject-name"), button.data("subject-id"));
+            setTeacher(button.data("teacher-name"), button.data("teacher-id"));
+            //modal.find('.modal-body input').val(recipient)
+        });
+
+    function setRoom(roomNumber) {
+        $('#room-select-button').html(roomNumber);
+        $('#roomId').val(roomNumber);
+    }
+
+    function setSubject(subjectName, subjectId) {
+        $('#subj-select-button').html(subjectName);
+        $('#subjectId').val(subjectId);
+    }
+
+    function setTeacher(teacherName, teacherId) {
+        $('#teacher-select-button').html(teacherName);
+        $('#teacherId').val(teacherId);
+    }
+
+    function searchbox(ul) {
+        //var ul = $('#'+id);
+        var input = ul.find('input');
+        var li = ul.find('li.dropdown-item');
+
+        input.keyup(function() {
+            var val = $(this).val();
+
+            if (val.length >= 1) {
+                li.hide();
+                li.filter(':contains("' + val + '")').show();
+            } else {
+                li.show();
+            }
+        });
+    }
+
+
+    function subjectSelected() {
+        var s = $('#teacher-select');
+        if (!s.hasClass('show')) {
+            var subjid = $('#subjectId').val();
+            $("#teacher-dropdown").empty();
+            //$("#SubCategoryId").append("<option value=''>Select SubCategory</option>");
+            $.getJSON(`?handler=TeachersSubject&subjectId=${subjid}`,
+                (data) => {
+                    $("#teacher-dropdown")
+                        .append(
+                            `<li role="presentation" class="search-box"><input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#teacher-dropdown'))" /></li>`);
+                    $.each(data,
+                        function(i, item) {
+                            $("#teacher-dropdown")
+                                .append(
+                                    `<li role="presentation" class="dropdown-item" onclick="setTeacher('${
+                                    item.fullName}', ${item.id})">${item.fullName}</li>`);
+                            console.log(item);
+                        });
+                });
+        }
+
+    }
+
+    //$("#subj-select").click(function () {
+    //    alert("click");
+    //    if ($(this).hasClass('show')) {
+    //        alert("it works");
+    //        //var subjectId = $(this).html;
+    //        //$("#teacher-select").empty();
+    //        ////$("#SubCategoryId").append("<option value=''>Select SubCategory</option>");
+    //        //$.getJSON(`?handler=TeachersSubject&subjectIs=${subjectId}`, (data) => {
+    //        //    $.each(data, function (i, item) {
+    //        //        $("#SubCategoryId").append(`<option value="${item.subCategoryId}">${item.subCategoryName}</option>`);
+    //        //    });
+    //        //});
+    //    }
+    //});
+</script>
