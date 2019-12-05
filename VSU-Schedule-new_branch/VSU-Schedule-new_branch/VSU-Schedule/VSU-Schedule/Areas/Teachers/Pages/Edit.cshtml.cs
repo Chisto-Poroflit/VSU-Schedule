@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VSU_Schedule.Areas.Teachers.Pages
 {
-    [Authorize(Roles = "Admin")]
+    
     public class EditModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;

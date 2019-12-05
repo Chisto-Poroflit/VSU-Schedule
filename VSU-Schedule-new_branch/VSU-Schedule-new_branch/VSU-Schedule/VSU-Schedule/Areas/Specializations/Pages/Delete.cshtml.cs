@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VSU_Schedule.Areas.Specializations.Pages
 {
-    [Authorize(Roles = "Admin")]
+    
     public class DeleteModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VSU_Schedule.Areas.Subjects.Pages
 {
-    [Authorize(Roles = "Admin")]
+    
     public class DetailsModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;

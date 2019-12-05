@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VSU_Schedule.Areas.Teachers.Pages
 {
-    [Authorize(Roles = "Admin")]
+    
     public class CreateModel : PageModel
     {
         private readonly DbLibrary.ApplicationContext _context;
