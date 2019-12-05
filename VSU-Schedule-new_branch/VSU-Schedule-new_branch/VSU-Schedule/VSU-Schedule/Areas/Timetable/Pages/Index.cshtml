@@ -114,8 +114,14 @@
                                             
                                             <div class="d-inline-block">
                                                 <form method="post">
-                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy"
-                                                            data-day="@day">
+                                                    <input type="hidden" asp-for="Input.Day" value="@day">
+                                                    <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
+                                                    <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
+                                                    <input type="hidden" asp-for="Input.RoomId" value="@couple.Room.Number">
+                                                    <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
+                                                    <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
+                                                    <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
                                                         S
                                                     </button>
                                                 </form>
@@ -148,8 +154,14 @@
                                             
                                             <div class="d-inline-block">
                                                 <form method="post">
-                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy"
-                                                           data-day="@day" >
+                                                    <input type="hidden" asp-for="Input.Day" value="@day">
+                                                    <input type="hidden" asp-for="Input.GroupId" value="@group.Id">
+                                                    <input type="hidden" asp-for="Input.ParaId" value="@para.Number">
+                                                    <input type="hidden" asp-for="Input.RoomId" value="@couple.Room.Number">
+                                                    <input type="hidden" asp-for="Input.SubjectId" value="@couple.Subject.Id">
+                                                    <input type="hidden" asp-for="Input.TeacherId" value="@couple.Teacher.Id">
+                                                    <input type="hidden" asp-for="Input.NumOrDenum" value="@numdenum">
+                                                    <button type="submit" class="btn btn-secondary w-100 h-100" title="Копировать" asp-page-handler="Copy">
                                                         S
                                                     </button>
                                                 </form>
@@ -187,8 +199,7 @@
                 </tbody>
             </table>
         </div>
-    }
-    <input type="hidden" asp-for="Input.Day" id="dayNumber">
+    }    
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -322,12 +333,6 @@
             setTeacher(button.data("teacher-name"), button.data("teacher-id"));
             //modal.find('.modal-body input').val(recipient)
         });
-
-    function setItems(event) {
-        var button = $(event.relatedTarget);
-        var day = button.data('day');
-        $('#dayNumber').val(day);
-    }
 
     function setRoom(roomNumber) {
         $('#room-select-button').html(roomNumber);

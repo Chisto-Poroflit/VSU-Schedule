@@ -55,8 +55,114 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         public async Task<IActionResult> OnPostCopyAsync()
         {
-            var input = Input;
-            int i = 1;
+            if(_context.Couples.Any(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == Input.GroupId) && s.ParaId == Input.ParaId && s.Numerator && s.Denomirator))
+            {
+                var coup = _context.Couples.FirstOrDefault(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == Input.GroupId) && s.ParaId == Input.ParaId);
+                var gr = _context.Groups.FirstOrDefault(q => q.Id == Input.GroupId);
+                var grps = _context.Groups.Where(g => g.SemesterNumber == gr.SemesterNumber).OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber).ToList();
+
+                int indexOfGroup = Array.IndexOf(grps.Select(s => s.Id).ToArray(), gr.Id);
+                int grpId;
+                if (indexOfGroup != grps.Count - 1)
+                {
+                    grpId = grps[indexOfGroup + 1].Id;
+                }
+                else
+                {
+                    return RedirectToPage("./Index");
+                }
+                if (_context.Couples.Any(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId))
+                {
+                    var couplesOfNextGroup = _context.Couples.Include(s => s.CoupleGroups).Where(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId).ToList();
+
+                    foreach(var c in couplesOfNextGroup)
+                    {
+
+                        if(c.CoupleGroups.Count > 1)
+                        {
+                            _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g => g.CoupleId == c.Id && g.GroupId == grpId));
+                            _context.SaveChanges();
+                        }
+
+                        else
+                        {
+                            _context.Couples.Remove(c);
+                            _context.SaveChanges();
+                        }
+                    }
+
+                }
+                _context.CoupleGroups.Add(new CoupleGroup { CoupleId = coup.Id, GroupId = grpId });
+                _context.SaveChanges();
+            }
+            else if (Input.NumOrDenum == 0)
+            {
+                var coup = _context.Couples.FirstOrDefault(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == Input.GroupId) && s.ParaId == Input.ParaId && s.Numerator);
+                var gr = _context.Groups.FirstOrDefault(q => q.Id == Input.GroupId);
+                var grps = _context.Groups.Where(g => g.SemesterNumber == gr.SemesterNumber).OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber).ToList();
+
+                int indexOfGroup = Array.IndexOf(grps.Select(s => s.Id).ToArray(), gr.Id);
+                int grpId;
+                if (indexOfGroup != grps.Count - 1)
+                {
+                    grpId = grps[indexOfGroup + 1].Id;
+                }
+                else
+                {
+                    return RedirectToPage("./Index");
+                }
+                if (_context.Couples.Any(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId && s.Numerator))
+                {
+                    var coupleOfNextGroup = _context.Couples.FirstOrDefault(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId);
+                    if (coupleOfNextGroup.CoupleGroups.Count > 1)
+                    {
+                        _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g => g.CoupleId == coupleOfNextGroup.Id && g.GroupId == grpId));
+                        _context.SaveChanges();
+                    }
+
+                    else
+                    {
+                        _context.Couples.Remove(coupleOfNextGroup);
+                        _context.SaveChanges();
+                    }
+                }
+                _context.CoupleGroups.Add(new CoupleGroup { CoupleId = coup.Id, GroupId = grpId });
+                _context.SaveChanges();
+            }
+            else
+            {
+                var coup = _context.Couples.FirstOrDefault(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == Input.GroupId) && s.ParaId == Input.ParaId && s.Denomirator);
+                var gr = _context.Groups.FirstOrDefault(q => q.Id == Input.GroupId);
+                var grps = _context.Groups.Where(g => g.SemesterNumber == gr.SemesterNumber).OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber).ToList();
+
+                int indexOfGroup = Array.IndexOf(grps.Select(s => s.Id).ToArray(), gr.Id);
+                int grpId;
+                if (indexOfGroup != grps.Count - 1)
+                {
+                    grpId = grps[indexOfGroup + 1].Id;
+                }
+                else
+                {
+                    return RedirectToPage("./Index");
+                }
+                if (_context.Couples.Any(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId && s.Denomirator))
+                {
+                    var coupleOfNextGroup = _context.Couples.FirstOrDefault(s => s.Day == Input.Day && s.CoupleGroups.Any(g => g.GroupId == grpId) && s.ParaId == Input.ParaId);
+                    if (coupleOfNextGroup.CoupleGroups.Count > 1)
+                    {
+                        _context.CoupleGroups.Remove(_context.CoupleGroups.FirstOrDefault(g => g.CoupleId == coupleOfNextGroup.Id && g.GroupId == grpId));
+                        _context.SaveChanges();
+                    }
+
+                    else
+                    {
+                        _context.Couples.Remove(coupleOfNextGroup);
+                        _context.SaveChanges();
+                    }
+                }
+                _context.CoupleGroups.Add(new CoupleGroup { CoupleId = coup.Id, GroupId = grpId });
+                _context.SaveChanges();
+            }
             return RedirectToPage("./Index");
         }
         public async Task<IActionResult> OnPostDeleteAsync()
