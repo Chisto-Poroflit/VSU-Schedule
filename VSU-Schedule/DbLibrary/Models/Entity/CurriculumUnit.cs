@@ -16,6 +16,6 @@ namespace DbLibrary.Models.Entity
         public int SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
         public List<CurriculumSubject> CurriculumSubjects { get; set; }
-        public List<Group> Groups { get; set; }
+        //public List<Group> Groups { get; set; }
     }
 }

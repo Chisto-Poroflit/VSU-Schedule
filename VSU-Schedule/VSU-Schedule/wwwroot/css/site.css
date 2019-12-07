@@ -41,6 +41,24 @@ timetable-arrow:hover {
     opacity: 1;
     transition-duration: 0.5s;
 }
+ul.dropdown-search-box {
+    max-height: 300px;
+    width: 270px;
+    overflow-y: auto;
+}
+
+ul.dropdown-search-box .search-box {
+    padding: 0 5px 5px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.add-btn {
+    opacity: 0.25;
+    transition-duration: 0.25s;
+    transition-property: opacity;
+}
+
+.add-btn:hover { opacity: 1 !important; }
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

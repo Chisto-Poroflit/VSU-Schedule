@@ -21,8 +21,8 @@ namespace DbLibrary.Models.Entity
 
         public int SpecializatioId { get; set; }
         public Specialization Specialization { get; set; }
-        public int CurriculumUnitId { get; set; }
-        public CurriculumUnit CurriculumUnit { get; set; }
+        //public int CurriculumUnitId { get; set; }
+        //public CurriculumUnit CurriculumUnit { get; set; }
         public List<CoupleGroup> CoupleGroups { get; set; }
     }
 }

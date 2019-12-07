@@ -268,6 +268,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            Para = _context.Para.ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
