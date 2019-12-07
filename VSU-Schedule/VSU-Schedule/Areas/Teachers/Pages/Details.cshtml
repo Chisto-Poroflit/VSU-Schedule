@@ -2,7 +2,7 @@
 @model VSU_Schedule.Areas.Teachers.Pages.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Html.DisplayFor(m=>m.Teacher.FullName);
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 

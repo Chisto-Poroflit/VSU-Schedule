@@ -21,7 +21,7 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
 
         public IActionResult OnGet()
         {
-        ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Id");
+        ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
             return Page();
         }
 

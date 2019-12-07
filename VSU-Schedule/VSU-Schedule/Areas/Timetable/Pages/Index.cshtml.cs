@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DbLibrary;
 using DbLibrary.Models.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace VSU_Schedule.Areas.Timetable.Pages
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private ApplicationContext _context;
