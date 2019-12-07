@@ -1,0 +1,54 @@
+﻿@page
+@model VSU_Schedule.Areas.CurriculumUnits.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityLect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityPrac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityLab)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnit[0].Specialization)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.CurriculumUnit) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityLect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityPrac)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityLab)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Specialization.Id)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace DbLibrary.Models.Entity
 {
     public class CurriculumUnit
@@ -13,8 +15,7 @@ namespace DbLibrary.Models.Entity
 
         public int SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
-
-        public int SubjectId { get; set; }
-        public Subject Subject { get; set; }
+        public List<CurriculumSubject> CurriculumSubjects { get; set; }
+        public List<Group> Groups { get; set; }
     }
 }

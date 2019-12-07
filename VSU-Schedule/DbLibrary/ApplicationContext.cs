@@ -25,6 +25,7 @@ namespace DbLibrary
         public DbSet<Couple> Couples { get; set; }
         public DbSet<CoupleGroup> CoupleGroups { get; set; }
         public DbSet<Para> Para { get; set; }
+        public DbSet<CurriculumSubject> CurriculumSubjects { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,6 +41,7 @@ namespace DbLibrary
             modelBuilder.ApplyConfiguration(new TeacherSubjectConfig());
             modelBuilder.ApplyConfiguration(new SpecializationConfig());
             modelBuilder.ApplyConfiguration(new CurriculumUnitConfig());
+            modelBuilder.ApplyConfiguration(new CurriculumSubjectConfig());
             modelBuilder.ApplyConfiguration(new GroupConfig());
             modelBuilder.ApplyConfiguration(new CoupleConfig());
             modelBuilder.ApplyConfiguration(new CoupleGroupConfig());

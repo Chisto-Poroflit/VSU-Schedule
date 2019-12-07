@@ -20,9 +20,6 @@ namespace DbLibrary.Models.EntityConfig
             builder.HasOne(cu => cu.Specialization)
                 .WithOne(s => s.CurriculumUnit)
                 .HasForeignKey<CurriculumUnit>(cu => cu.SpecializationId);
-            builder.HasOne(cu => cu.Subject)
-                .WithOne(s => s.CurriculumUnit)
-                .HasForeignKey<CurriculumUnit>(cu => cu.SubjectId);
         }
     }
 }

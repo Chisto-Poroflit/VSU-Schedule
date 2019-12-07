@@ -18,7 +18,7 @@ namespace DbLibrary.Models.Entity
         public int Semester { get; set; }
 
         public List<Couple> Couples { get; set; }
-        public CurriculumUnit CurriculumUnit { get; set; }
+        public List<CurriculumSubject> CurriculumSubjects { get; set; }
         public List<TeacherSubject> TeacherSubjects { get; set; }
 
     }
