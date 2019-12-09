@@ -14,13 +14,7 @@
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityLect)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityPrac)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CurriculumUnit[0].QuantityLab)
+            @Html.DisplayNameFor(model => model.CurriculumUnit[0].SemesterNumber)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CurriculumUnit[0].Specialization)
@@ -32,13 +26,7 @@
 @foreach (var item in Model.CurriculumUnit) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.QuantityLect)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityPrac)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityLab)
+                @Html.DisplayFor(modelItem => item.SemesterNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Specialization.Name)

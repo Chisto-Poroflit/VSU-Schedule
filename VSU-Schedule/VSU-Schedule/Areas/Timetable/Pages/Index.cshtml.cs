@@ -179,7 +179,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     && g.Numerator == num
                     && g.ParaId == Input.ParaId
                     && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
-                    return Page();
+                    return RedirectToPage("./Index");
             }
 
             else
@@ -190,7 +190,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     && g.Denomirator == denum
                     && g.ParaId == Input.ParaId
                     && g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
-                    return Page();
+                    return RedirectToPage("./Index");
             }
 
             Couple coup;
@@ -264,13 +264,20 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             public int ParaId { get; set; }
             public int NumOrDenum { get; set; }
             public bool NumAndDenum { get; set; }
+            public int SemesterNumber { get; set; }
         }
 
         [BindProperty] public InputModel Input { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Input.SubjectId == null)
+            {
+                return RedirectToPage("./Index");
+            }
+
             Para = _context.Para.ToList();
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -291,9 +298,32 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 denum = true;
             }
 
-            var gr = _context.Groups.FirstOrDefault(g => g.Id == Input.GroupId);
+            //var gr = _context.Groups.FirstOrDefault(g => g.Id == Input.GroupId);
 
-            if (_context.Couples.Any(g =>
+            if(_context.Couples.Any(g=>
+                g.Day == Input.Day &&
+                g.ParaId == Input.ParaId &&
+                g.CoupleGroups.Any(s => s.Group.SemesterNumber != Input.SemesterNumber) &&
+                (g.TeacherId == Input.TeacherId || g.RoomId == Input.RoomId)))
+            {
+                return RedirectToPage("./Index");
+            }
+
+            else if(_context.Couples.Any(g =>
+                    g.Day == Input.Day && 
+                    g.ParaId == Input.ParaId &&
+                    g.CoupleGroups.Any(s => s.Group.SemesterNumber == Input.SemesterNumber)
+                    && ((g.Numerator && g.Denomirator) ||
+                    (g.Numerator == num && g.Denomirator == denum) ||
+                    (num && denum) ) &&
+                    ( (g.RoomId == Input.RoomId && g.TeacherId != Input.TeacherId) || 
+                    (g.TeacherId == Input.TeacherId && g.RoomId != Input.RoomId) ) 
+                    ) )
+            {
+                return RedirectToPage("./Index");
+            }
+
+            else if (_context.Couples.Any(g =>
                 g.Day == Input.Day &&
                 g.ParaId == Input.ParaId &&
                 g.CoupleGroups.Any(s => s.GroupId == Input.GroupId)))
@@ -321,7 +351,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                             ParaId = Input.ParaId,
                             RoomId = Input.RoomId,
                             SubjectId = Input.SubjectId,
-                            TeacherId = Input.TeacherId
+                            TeacherId = Input.TeacherId,
+                            SemesterNumber = Input.SemesterNumber
                         };
                         _context.Couples.Add(newCouple);
                         _context.SaveChanges();
@@ -363,7 +394,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                             ParaId = Input.ParaId,
                             RoomId = Input.RoomId,
                             SubjectId = Input.SubjectId,
-                            TeacherId = Input.TeacherId
+                            TeacherId = Input.TeacherId,
+                            SemesterNumber = Input.SemesterNumber
                         };
                         _context.Couples.Add(newCouple);
                         _context.SaveChanges();
@@ -410,7 +442,7 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                         {
                             if (existCouple.CoupleGroups.Count > 1)
                             {
-                                _context.CoupleGroups.Remove(existCouple.CoupleGroups.FirstOrDefault(cg => cg.GroupId == gr.Id));
+                                _context.CoupleGroups.Remove(existCouple.CoupleGroups.FirstOrDefault(cg => cg.GroupId == Input.GroupId));
                             }
                             else
                             {
@@ -428,7 +460,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                         ParaId = Input.ParaId,
                         RoomId = Input.RoomId,
                         SubjectId = Input.SubjectId,
-                        TeacherId = Input.TeacherId
+                        TeacherId = Input.TeacherId,
+                        SemesterNumber = Input.SemesterNumber
                     };
                     _context.Couples.Add(newCouple);
                     _context.SaveChanges();
@@ -444,23 +477,17 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             else if (_context.Couples.Any(g =>
                 g.Day == Input.Day && g.Numerator == num
                                    && g.Denomirator == denum && g.ParaId == Input.ParaId &&
-                                   g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                                   g.CoupleGroups.Any(s => s.Group.SemesterNumber == Input.SemesterNumber)
                                    && (g.RoomId == Input.RoomId || g.TeacherId == Input.TeacherId)))
             {
                 var coup = _context.Couples.FirstOrDefault(g =>
                     g.Day == Input.Day && g.Numerator == num
                                        && g.Denomirator == denum && g.ParaId == Input.ParaId &&
-                                       g.CoupleGroups.Any(s => s.Group.SemesterNumber == gr.SemesterNumber)
+                                       g.CoupleGroups.Any(s => s.Group.SemesterNumber == Input.SemesterNumber)
                                        && (g.RoomId == Input.RoomId || g.TeacherId == Input.TeacherId));
 
-                if (coup.RoomId != Input.RoomId || coup.TeacherId != Input.TeacherId ||
-                    coup.SubjectId != Input.SubjectId)
-                    return RedirectToPage("./Index");
-                else
-                {
-                    _context.CoupleGroups.Add(new CoupleGroup {CoupleId = coup.Id, GroupId = Input.GroupId});
-                    _context.SaveChanges();
-                }
+                _context.CoupleGroups.Add(new CoupleGroup {CoupleId = coup.Id, GroupId = Input.GroupId});
+                _context.SaveChanges();
             }
 
             else
@@ -473,7 +500,8 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                     ParaId = Input.ParaId,
                     RoomId = Input.RoomId,
                     SubjectId = Input.SubjectId,
-                    TeacherId = Input.TeacherId
+                    TeacherId = Input.TeacherId,
+                    SemesterNumber = Input.SemesterNumber
                 };
                 _context.Couples.Add(couple);
                 _context.SaveChanges();

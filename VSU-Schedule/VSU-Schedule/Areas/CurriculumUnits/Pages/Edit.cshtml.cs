@@ -37,7 +37,7 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             {
                 return NotFound();
             }
-           ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Id");
+           ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
             return Page();
         }
 

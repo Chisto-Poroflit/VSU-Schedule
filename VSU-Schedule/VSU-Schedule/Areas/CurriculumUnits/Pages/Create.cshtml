@@ -14,8 +14,17 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="CurriculumUnit.SemesterNumber" class="control-label"></label>
+                <input asp-for="CurriculumUnit.SemesterNumber" class="form-control" />
+                <span asp-validation-for="CurriculumUnit.SemesterNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="CurriculumUnit.Specialization" class="control-label"></label>
-                <select asp-for="CurriculumUnit.SpecializationId" class ="form-control" asp-items="ViewBag.SpecializationId"></select>
+                <select asp-for="CurriculumUnit.SpecializationId" class="form-control" asp-items="ViewBag.SpecializationId"></select>
+                <span asp-validation-for="CurriculumUnit.Specialization" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal">Предметы</button>
             </div>
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" />
@@ -28,6 +37,94 @@
     <a asp-page="Index">Назад к списку</a>
 </div>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление предметов</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label"><h3>Предмет</h3></label>
+                            </div>
+                            <div class="col-4">
+                                <label for="message-text" class="col-form-label"><h3>Количество часов</h3></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="dropdown d-flex">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="subject-select-button" data-toggle="dropdown" aria-expanded="false">
+                                        Выбрать
+                                        <span class="caret"></span>
+                                    </button>
+                                    <input type="hidden" id="subjId" asp-for="Input.SubjectId" />
+                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subject-dropdown">
+                                        <li role="presentation" class="search-box">
+                                            <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subject-dropdown'))" />
+                                        </li>
+                                        @foreach (var subj in Model.Subjects)
+                                        {
+                                            <li role="presentation" class="dropdown-item" onclick="setSubject(@subj.Id, @subj.Name)">@subj.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <input asp-for="Input.QuatityOfHours" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">ОК</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    $('#exampleModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            //setSubject(button.data("subject-name"), button.data("subject-id"));
+        });
+
+    function setSubject(subjectId, subjectName) {
+        $('#subject-select-button').html(subjectName);
+        $('#subjId').val(subjectId);
+    }
+
+    function searchbox(ul) {
+        //var ul = $('#'+id);
+        var input = ul.find('input');
+        var li = ul.find('li.dropdown-item');
+
+        input.keyup(function () {
+            var val = $(this).val();
+
+            if (val.length >= 1) {
+                li.hide();
+                li.filter(':contains("' + val + '")').show();
+            } else {
+                li.show();
+            }
+        });
+    }
+</script>

@@ -19,14 +19,24 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             _context = context;
         }
 
+        public class SubjectInput
+        {
+            public int SubjectId { get; set; }
+            public int QuatityOfHours { get; set; }
+        }
         public IActionResult OnGet()
         {
-        ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
+            Subjects = _context.Subjects.ToList();
+            ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
+            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
             return Page();
         }
 
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
+        public List<Subject> Subjects { get; set; }
+        [BindProperty]
+        public SubjectInput Input { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
