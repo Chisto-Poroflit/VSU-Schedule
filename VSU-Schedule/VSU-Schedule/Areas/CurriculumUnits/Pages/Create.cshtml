@@ -73,7 +73,7 @@
                                         </li>
                                         @foreach (var subj in Model.Subjects)
                                         {
-                                            <li role="presentation" class="dropdown-item" onclick="setSubject(@subj.Id, @subj.Name)">@subj.Name</li>
+                                            <li role="presentation" class="dropdown-item" onclick="setSubject(@subj.Id, '@subj.Name')">@subj.Name</li>
                                         }
                                     </ul>
                                 </div>
