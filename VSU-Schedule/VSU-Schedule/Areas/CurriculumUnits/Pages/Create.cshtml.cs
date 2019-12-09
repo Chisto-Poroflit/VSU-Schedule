@@ -27,6 +27,7 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         public IActionResult OnGet()
         {
             Subjects = _context.Subjects.ToList();
+            Input = new List<SubjectInput>() { new SubjectInput(), new SubjectInput() };
             ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
             //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
             return Page();
@@ -35,10 +36,9 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
-        [BindProperty]
-        public SubjectInput Input { get; set; }
+        [BindProperty] public List<SubjectInput> Input { get; set; } 
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +46,16 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             }
 
             _context.CurriculumUnits.Add(CurriculumUnit);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return RedirectToPage("./Index");
+        }
+
+        public IActionResult OnPostAddInput()
+        {
+            Input.Add(new SubjectInput());
+            Subjects = _context.Subjects.ToList();
+            return Partial("_CreateModalPartial", this);
         }
     }
 }

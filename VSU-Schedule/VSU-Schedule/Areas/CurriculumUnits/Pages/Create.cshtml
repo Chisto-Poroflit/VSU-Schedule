@@ -1,4 +1,5 @@
 ﻿@page
+@using VSU_Schedule.Areas.CurriculumUnits.Pages
 @model VSU_Schedule.Areas.CurriculumUnits.Pages.CreateModel
 
 @{
@@ -46,57 +47,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="message-text" class="col-form-label"><h3>Предмет</h3></label>
-                            </div>
-                            <div class="col-4">
-                                <label for="message-text" class="col-form-label"><h3>Количество часов</h3></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="dropdown d-flex">
-                                    <button type="button" class="btn btn-secondary dropdown-toggle" id="subject-select-button" data-toggle="dropdown" aria-expanded="false">
-                                        Выбрать
-                                        <span class="caret"></span>
-                                    </button>
-                                    <input type="hidden" id="subjId" asp-for="Input.SubjectId" />
-                                    <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subject-dropdown">
-                                        <li role="presentation" class="search-box">
-                                            <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subject-dropdown'))" />
-                                        </li>
-                                        @foreach (var subj in Model.Subjects)
-                                        {
-                                            <li role="presentation" class="dropdown-item" onclick="setSubject(@subj.Id, '@subj.Name')">@subj.Name</li>
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <input asp-for="Input.QuatityOfHours" class="form-control"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">ОК</button>
-                </div>
-            </form>
+            <div id="modal-form">
+                @Html.Partial("_CreateModalPartial")
+            </div>
         </div>
 
     </div>
 </div>
 
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/lib/jquery-ajax-unobtrusive/src/jquery.unobtrusive-ajax.js"></script>
+    }
 }
 
 <script>
@@ -106,10 +70,19 @@
             //setSubject(button.data("subject-name"), button.data("subject-id"));
         });
 
-    function setSubject(subjectId, subjectName) {
-        $('#subject-select-button').html(subjectName);
-        $('#subjId').val(subjectId);
+    function setSubject(subjectId, subjectName, i) {
+        $(`#subject-select-button-${i}`).html(subjectName);
+        $(`#subjId-${i}`).val(subjectId);
     }
+
+    //$("#addInput").on("click",
+    //    function () {
+    //        $("#form").attr("data-ajax-url", "?handler=AddInput");
+    //    });
+    //$("#submitInputs").on("click",
+    //    function() {
+    //        $("#form").attr("data-ajax-url", "?handler=");
+    //    });
 
     function searchbox(ul) {
         //var ul = $('#'+id);
@@ -127,4 +100,9 @@
             }
         });
     }
+
+    completed = function (xhr) {
+        data = xhr.responseText;
+        $("#modal-form").html(data);
+    };
 </script>
