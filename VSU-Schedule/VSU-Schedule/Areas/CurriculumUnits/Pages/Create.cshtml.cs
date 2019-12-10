@@ -36,9 +36,10 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
-        [BindProperty] public List<SubjectInput> Input { get; set; } 
+        [BindProperty] public List<SubjectInput> Input { get; set; }
 
-        public IActionResult OnPost()
+
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +47,17 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             }
 
             _context.CurriculumUnits.Add(CurriculumUnit);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            List<CurriculumSubject> curSubjts = new List<CurriculumSubject>();
+            foreach (var elem in Input)
+            {
+                if (elem.SubjectId != 0 && elem.QuatityOfHours != 0)
+                {
+                    curSubjts.Add(new CurriculumSubject {CurriculumId = CurriculumUnit.Id, SubjectId = elem.SubjectId, QuantityAll = elem.QuatityOfHours });
+                }
+            }
+            _context.CurriculumSubjects.AddRange(curSubjts);
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

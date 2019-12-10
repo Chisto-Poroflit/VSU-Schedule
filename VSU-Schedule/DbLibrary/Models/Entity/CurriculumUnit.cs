@@ -25,6 +25,8 @@ namespace DbLibrary.Models.Entity
 
         [Display(Name = "Специальность")]
         public Specialization Specialization { get; set; }
+
+        [Display(Name="Предметы")]
         public List<CurriculumSubject> CurriculumSubjects { get; set; }
         //public List<Group> Groups { get; set; }
     }

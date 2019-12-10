@@ -12,11 +12,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" id="form" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CurriculumUnit.SemesterNumber" class="control-label"></label>
-                <input asp-for="CurriculumUnit.SemesterNumber" class="form-control" />
+                <input asp-for="CurriculumUnit.SemesterNumber" class="form-control" value="1"/>
                 <span asp-validation-for="CurriculumUnit.SemesterNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,8 +28,26 @@
                 <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal">Предметы</button>
             </div>
             <div class="form-group">
-                <input type="submit" value="Добавить" class="btn btn-primary" />
+                <input type="submit" value="Добавить" class="btn btn-primary" onclick="hndlr_clear()"/>
             </div>
+            
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Добавление предметов</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="modal-form">
+                            @Html.Partial("_CreateModalPartial")
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </form>
     </div>
 </div>
@@ -38,22 +56,7 @@
     <a asp-page="Index">Назад к списку</a>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Добавление предметов</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div id="modal-form">
-                @Html.Partial("_CreateModalPartial")
-            </div>
-        </div>
 
-    </div>
-</div>
 
 
 @section Scripts {
@@ -75,14 +78,15 @@
         $(`#subjId-${i}`).val(subjectId);
     }
 
-    //$("#addInput").on("click",
-    //    function () {
-    //        $("#form").attr("data-ajax-url", "?handler=AddInput");
-    //    });
-    //$("#submitInputs").on("click",
-    //    function() {
-    //        $("#form").attr("data-ajax-url", "?handler=");
-    //    });
+    function hndlr() {
+        $("#form").attr("data-ajax", "true");
+        $("#form").attr("data-ajax-url", "?handler=AddInput");
+    }
+
+    function hndlr_clear() {
+        $("#form").attr("data-ajax", "false");
+        $("#form").attr("data-ajax-url", "?handler=");
+    }
 
     function searchbox(ul) {
         //var ul = $('#'+id);

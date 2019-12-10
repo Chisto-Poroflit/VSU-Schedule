@@ -19,11 +19,14 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             _context = context;
         }
 
-        public IList<CurriculumUnit> CurriculumUnit { get;set; }
+        public IList<CurriculumUnit> CurriculumUnits { get;set; }
+        //public List<CurriculumSubject> CurriculumSubjects { get; set; }
 
         public async Task OnGetAsync()
         {
-            CurriculumUnit = await _context.CurriculumUnits
+            CurriculumUnits = await _context.CurriculumUnits
+                .Include(c => c.CurriculumSubjects)
+                .ThenInclude(cs=>cs.Subject)
                 .Include(c => c.Specialization).ToListAsync();
         }
     }

@@ -3,7 +3,7 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-<form method="post" id="form" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" data-ajax-url="?handler=AddInput">
+@*<form  data-ajax-url="?handler=AddInput">*@
     <div class="modal-body">
         <div class="form-group">
             <div class="row">
@@ -48,20 +48,25 @@
                         </div>
                         <div class="col-4 offset-1">
                             <input asp-for="Input[i].QuatityOfHours" class="form-control"/>
+                            <span asp-validation-for="Input[i].QuatityOfHours" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
             }
         </div>
-        <button id="addInput" class="btn btn-primary" type="submit">
-        </button>
+        <button class="btn btn-primary" type="submit" onclick="hndlr()">Добавить предмет</button>
     </div>
 
     <div class="modal-footer">
         <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-        @*<button type="submit" id="submitInputs" class="btn btn-primary">ОК</button>*@
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button data-dismiss="modal" id="submitInputs" class="btn btn-primary">ОК</button>
+        @*<button type="submit" class="btn btn-secondary">
             <span aria-hidden="true">OK</span>
-        </button>
+        </button>*@
     </div>
-</form>
+
+@*</form>*@
+
+<script>
+    
+</script>
