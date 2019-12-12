@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbLibrary\DbLibrary.csproj" />
+    <ProjectReference Include="..\ExcelLibrary\ExcelLibrary.csproj" />
   </ItemGroup>
 
 </Project>

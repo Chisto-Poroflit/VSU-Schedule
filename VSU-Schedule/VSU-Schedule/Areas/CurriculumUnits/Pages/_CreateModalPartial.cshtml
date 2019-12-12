@@ -50,6 +50,9 @@
                             <input asp-for="Input[i].QuatityOfHours" class="form-control"/>
                             <span asp-validation-for="Input[i].QuatityOfHours" class="text-danger"></span>
                         </div>
+                        <div class="col-2">
+                            <input type="submit" value="Удалить" class="btn btn-primary" onclick="hndlr_delete(@i)" />
+                        </div>
                     </div>
                 </div>
             }

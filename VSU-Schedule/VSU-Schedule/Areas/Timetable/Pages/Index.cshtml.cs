@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DbLibrary;
 using DbLibrary.Models.Entity;
+using ExcelLibrary;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -47,6 +48,14 @@ namespace VSU_Schedule.Areas.Timetable.Pages
                 .ThenInclude(g => g.Group)
                 .ToList();
             CoupleGroups = _context.CoupleGroups.ToList();
+        }
+
+        public IActionResult OnPostCreateExcel()
+        {
+            var exel = new Excel(new SimpleExcelConfig());
+            var dbToExcel = new DbToExcel(_context);
+            exel.CreateStartExcel(dbToExcel.CreateGroupInfos());
+            return RedirectToPage("./Index");
         }
 
         public JsonResult OnGetTeachersSubject(int subjectId)

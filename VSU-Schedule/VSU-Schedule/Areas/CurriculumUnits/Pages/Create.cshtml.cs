@@ -37,7 +37,14 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
         [BindProperty] public List<SubjectInput> Input { get; set; }
+        [BindProperty] public int InputId { get; set; }
 
+        public async Task<IActionResult> OnPostDeleteInput()
+        {
+            Input.Remove(Input[InputId]);
+            Subjects = _context.Subjects.ToList();
+            return Partial("_CreateModalPartial", this);
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {

@@ -1,0 +1,69 @@
+﻿@model VSU_Schedule.Areas.CurriculumUnits.Pages.EditModel
+@{
+    //ViewData["Title"] = "EditModalPartial";
+}
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-4">
+                <label for="message-text" class="col-form-label">
+                    <h3>Предмет</h3>
+                </label>
+            </div>
+            <div class="col-4">
+                <label for="message-text" class="col-form-label">
+                    <h3>Количество часов</h3>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="inputs">
+        @for (int i = 0; i < Model.Input.Count; i++)
+        {
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="dropdown d-flex">
+                            <button type="button" class="btn btn-secondary dropdown-toggle w-100" id="subject-select-button-@i" data-toggle="dropdown" aria-expanded="false">
+                                @{
+                                    var btnText = Model.Input[i].SubjectId == 0 ? "Выбрать" :
+                                    Model.Subjects.FirstOrDefault(s => s.Id == Model.Input[i].SubjectId).Name;
+                                }
+                                @Html.DisplayFor(m => btnText)
+                                <span class="caret"></span>
+                            </button>
+                            <input type="hidden" id="subjId-@i" asp-for="Input[i].SubjectId" />
+                            <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subject-dropdown-@i">
+                                <li role="presentation" class="search-box">
+                                    <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subject-dropdown-@i'))" />
+                                </li>
+                                @foreach (var subj in Model.Subjects)
+                                {
+                                    <li role="presentation" class="dropdown-item" onclick="setSubject(@subj.Id, '@subj.Name', @i)">@subj.Name</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-4 offset-1">
+                        <input asp-for="Input[i].QuatityOfHours" class="form-control" />
+                        <span asp-validation-for="Input[i].QuatityOfHours" class="text-danger"></span>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" value="Удалить" class="btn btn-primary" onclick="hndlr_delete(@i)" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <button class="btn btn-primary" type="submit" onclick="hndlr()">Добавить предмет</button>
+</div>
+
+<div class="modal-footer">
+    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button data-dismiss="modal" id="submitInputs" class="btn btn-primary">ОК</button>
+    @*<button type="submit" class="btn btn-secondary">
+            <span aria-hidden="true">OK</span>
+        </button>*@
+</div>
+

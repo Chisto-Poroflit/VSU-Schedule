@@ -10,6 +10,7 @@ namespace DbLibrary.Models.EntityConfig
         {
             builder.HasKey(cu => cu.Id);
             builder.HasAlternateKey(cu => new { cu.SemesterNumber, cu.SpecializationId });
+            //builder.HasIndex(cu => new { cu.SemesterNumber, cu.SpecializationId });
             builder.Property(cu => cu.Id)
                 .ValueGeneratedOnAdd();
             //builder.Property(cu => cu.QuantityLab)

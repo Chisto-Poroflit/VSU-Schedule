@@ -46,6 +46,7 @@
                     </div>
 
                 </div>
+                <input id="InputId" type="hidden" asp-for="@Model.InputId" />
             </div>
 
         </form>
@@ -81,6 +82,12 @@
     function hndlr() {
         $("#form").attr("data-ajax", "true");
         $("#form").attr("data-ajax-url", "?handler=AddInput");
+    }
+
+    function hndlr_delete(i) {
+        $("#form").attr("data-ajax", "true");
+        $("#form").attr("data-ajax-url", "?handler=DeleteInput");
+        $('#InputId').val(i);
     }
 
     function hndlr_clear() {

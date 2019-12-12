@@ -7,6 +7,9 @@
     bool activeSemesterTab = true;
     bool activeSemesterPage = true;
 }
+<form method="post">
+    <input type="submit" value="Excel" class="btn btn-outline-primary" asp-page-handler="CreateExcel" >
+</form>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {

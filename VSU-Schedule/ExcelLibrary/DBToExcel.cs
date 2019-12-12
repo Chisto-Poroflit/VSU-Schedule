@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using DbLibrary;
+using ExcelLibrary.Infos;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExcelLibrary
@@ -15,6 +16,17 @@ namespace ExcelLibrary
             _applicationContext = context;
         }
 
+        public List<GroupInfo> CreateGroupInfos()
+        {
+            List<GroupInfo> groups = new List<GroupInfo>();
+
+            foreach (var gr in _applicationContext.Groups)
+            {
+                groups.Add(new GroupInfo(gr.GroupNumber, gr.SubgroupNumber, gr.SemesterNumber % 2 == 0 ? gr.SemesterNumber / 2 : gr.SemesterNumber + 1 / 2, gr.SemesterNumber > 8 ? CourseType.Mag : CourseType.Bachelor));
+            }
+
+            return groups;
+        }
 
         public List<List<int>> GroupCounter()
         {
