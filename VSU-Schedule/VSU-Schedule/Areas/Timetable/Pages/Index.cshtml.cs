@@ -52,9 +52,10 @@ namespace VSU_Schedule.Areas.Timetable.Pages
 
         public IActionResult OnPostCreateExcel()
         {
-            var exel = new Excel(new SimpleExcelConfig());
+            var excel = new Excel(new SimpleExcelConfig());
             var dbToExcel = new DbToExcel(_context);
-            exel.CreateStartExcel(dbToExcel.CreateGroupInfos());
+            excel.CreateStartExcel(dbToExcel.CreateGroupInfos());
+            excel.AddCouplesToExcel(dbToExcel.CreateCoupleInfos(false), dbToExcel.CreateGroupInfos());
             return RedirectToPage("./Index");
         }
 

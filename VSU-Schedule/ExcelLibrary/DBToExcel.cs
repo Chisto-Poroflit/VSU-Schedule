@@ -28,6 +28,49 @@ namespace ExcelLibrary
             return groups;
         }
 
+        public List<CoupleInfo> CreateCoupleInfos(bool chet)
+        {
+            List<CoupleInfo> couples = new List<CoupleInfo>();
+
+            var coups = _applicationContext.Couples
+                .Include(m => m.Subject)
+                .Include(m => m.Teacher)
+                .Include(m => m.CoupleGroups)
+                .ThenInclude(m => m.Group)
+                .ToList();
+            if (chet)
+            {
+                foreach (var coup in coups.Where(m => m.SemesterNumber % 2 == 0))
+                {
+                    List<string> groups = new List<string>();
+
+                    foreach (var gr in coup.CoupleGroups)
+                    {
+                        groups.Add($"{gr.Group.GroupNumber}.{gr.Group.SubgroupNumber}");
+                    }
+
+                    couples.Add(new CoupleInfo(coup.Subject.Name, coup.RoomId, coup.Teacher.FullName, coup.SemesterNumber,
+                        coup.ParaId, coup.Day, coup.Numerator, coup.Denomirator, groups));
+                }
+            }
+            else
+            {
+                foreach (var coup in coups.Where(m => m.SemesterNumber % 2 != 0))
+                {
+                    List<string> groups = new List<string>();
+
+                    foreach (var gr in coup.CoupleGroups)
+                    {
+                        groups.Add($"{gr.Group.GroupNumber}.{gr.Group.SubgroupNumber}");
+                    }
+
+                    couples.Add(new CoupleInfo(coup.Subject.Name, coup.RoomId, coup.Teacher.FullName, coup.SemesterNumber+1,
+                        coup.ParaId, coup.Day, coup.Numerator, coup.Denomirator, groups));
+                }
+            }
+            return couples;
+        }
+
         public List<List<int>> GroupCounter()
         {
             using (_applicationContext)
