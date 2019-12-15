@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DbLibrary;
 using DbLibrary.Models.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace VSU_Schedule.Areas.CurriculumUnits.Pages
 {
@@ -17,6 +18,12 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         public CreateModel(DbLibrary.ApplicationContext context)
         {
             _context = context;
+        }
+
+        public class CopySpecInput
+        {
+            public int SpecId { get; set; }
+            public int SemesterNumber { get; set; }
         }
 
         public class SubjectInput
@@ -33,11 +40,29 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             return Page();
         }
 
+        public async Task<IActionResult> OnPostCopyCurriculum()
+        {
+            var curriculumUnit = _context.CurriculumUnits
+                .Include(c => c.Specialization)
+                .Include(c => c.CurriculumSubjects)
+                .ThenInclude(cs => cs.Subject)
+                .FirstOrDefault(m => m.SemesterNumber == SpecInput.SemesterNumber && m.SpecializationId == SpecInput.SpecId);
+
+            Input = new List<SubjectInput>();
+            foreach (var elem in curriculumUnit.CurriculumSubjects)
+            {
+                Input.Add(new SubjectInput { QuatityOfHours = elem.QuantityAll, SubjectId = elem.SubjectId });
+            }
+
+            return Page();
+        }
+
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
         [BindProperty] public List<SubjectInput> Input { get; set; }
         [BindProperty] public int InputId { get; set; }
+        [BindProperty] public CopySpecInput SpecInput { get; set; }
 
         public async Task<IActionResult> OnPostDeleteInput()
         {
