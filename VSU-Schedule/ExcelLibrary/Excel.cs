@@ -16,13 +16,14 @@ namespace ExcelLibrary
         public ExcelConfig Config { get; }
 
         private readonly ExcelPackage _excel;
-        private readonly FileInfo _excelFileTmpPath;
+        public readonly FileInfo _excelFileTmpPath;
 
         public Excel(ExcelConfig config)
         {
             Config = config;
             _excel = new ExcelPackage();
-            _excelFileTmpPath = new FileInfo($"{Directory.GetCurrentDirectory()}/{Guid.NewGuid().ToString()}.xlsx");
+            string filepath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\excel", $"{Guid.NewGuid().ToString()}.xlsx");
+            _excelFileTmpPath = new FileInfo(filepath);
         }
 
         public void CreateStartExcel(List<GroupInfo> groups)

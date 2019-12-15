@@ -20,4 +20,9 @@
     <ProjectReference Include="..\ExcelLibrary\ExcelLibrary.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\excel\" />
+  </ItemGroup>
+
 </Project>

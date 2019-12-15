@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DbLibrary;
 using DbLibrary.Models.Entity;
@@ -56,8 +59,18 @@ namespace VSU_Schedule.Areas.Timetable.Pages
             var dbToExcel = new DbToExcel(_context);
             excel.CreateStartExcel(dbToExcel.CreateGroupInfos());
             excel.AddCouplesToExcel(dbToExcel.CreateCoupleInfos(false), dbToExcel.CreateGroupInfos());
-            return RedirectToPage("./Index");
+            var fs = new FileStream(excel._excelFileTmpPath.FullName, FileMode.Open, FileAccess.Read);
+
+            return File(fs, "application/msexcel", "Raspisanue.xlsx");
+            //return RedirectToPage("./Index");
         }
+
+        //public async Task<FileStreamResult> FileToDownloadAsync(string filePath)
+        //{
+        //    var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+        //    return File(fs,"application/msexcel","Raspisanue.xlsx");
+        //}
 
         public JsonResult OnGetTeachersSubject(int subjectId)
         {
