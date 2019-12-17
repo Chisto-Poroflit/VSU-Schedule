@@ -22,7 +22,10 @@ namespace ExcelLibrary
         {
             Config = config;
             _excel = new ExcelPackage();
-            string filepath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\excel", $"{Guid.NewGuid().ToString()}.xlsx");
+            var directory = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\excel"));
+            if(!directory.Exists)
+                directory.Create();
+            string filepath = Path.Combine(directory.FullName, $"{Guid.NewGuid().ToString()}.xlsx");
             _excelFileTmpPath = new FileInfo(filepath);
         }
 
