@@ -54,7 +54,7 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
                 Input.Add(new SubjectInput { QuatityOfHours = elem.QuantityAll, SubjectId = elem.SubjectId });
             }
 
-            return Page();
+            return Partial("_CopyModalPartial",this);
         }
 
         [BindProperty]
