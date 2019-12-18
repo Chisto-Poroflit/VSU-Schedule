@@ -12,14 +12,14 @@
 <div class="form-group">
     <button type="button" class="btn btn-outline-primary w-100" data-toggle="modal" data-target="#copyModal">Создать из существующего учебного плана</button>
 </div>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form method="post" id="form" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CurriculumUnit.SemesterNumber" class="control-label"></label>
-                <input asp-for="CurriculumUnit.SemesterNumber" class="form-control" value="1" />
+                <input asp-for="CurriculumUnit.SemesterNumber" class="form-control" value="1"/>
                 <span asp-validation-for="CurriculumUnit.SemesterNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -30,9 +30,9 @@
             <div class="form-group">
                 <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal">Предметы</button>
             </div>
-            
+
             <div class="form-group">
-                <input type="submit" value="Добавить" class="btn btn-primary" onclick="hndlr_clear()" />
+                <input type="submit" value="Добавить" class="btn btn-primary" onclick="hndlr_clear()"/>
             </div>
 
             <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-labelledby="copyModalLabel" aria-hidden="true">
@@ -67,7 +67,7 @@
                     </div>
 
                 </div>
-                <input id="InputId" type="hidden" asp-for="@Model.InputId" />
+                <input id="InputId" type="hidden" asp-for="@Model.InputId"/>
             </div>
 
         </form>
@@ -77,8 +77,6 @@
 <div>
     <a asp-page="Index">Назад к списку</a>
 </div>
-
-
 
 
 @section Scripts {
@@ -106,6 +104,12 @@
         $("#form").attr("data-ajax-url", "?handler=AddInput");
     }
 
+    function hndlr_update() {
+        $("#form").attr("data-ajax-complete", "completed");
+        $("#form").attr("data-ajax", "true");
+        $("#form").attr("data-ajax-url", "?handler=Update");
+    }
+
     function hndlr_delete(i) {
         $("#form").attr("data-ajax-complete", "completed");
         $("#form").attr("data-ajax", "true");
@@ -117,6 +121,10 @@
         $("#form").attr("data-ajax-complete", "completed");
         $("#form").attr("data-ajax", "false");
         $("#form").attr("data-ajax-url", "?handler=");
+    }
+
+    function update_subjects() {
+
     }
 
     function searchbox(ul) {
@@ -143,8 +151,76 @@
 
 
     copy_completed = function (xhr) {
-        alert("copy");
-        data = xhr.responseText;
-        $("#copy-modal-form").html(data);
-    };
+        data = JSON.parse(xhr.responseText);
+        $("#inputs-copy").empty();
+        var allSubj = data.allSubjects;
+        var items = data.subjects;
+
+        $("#inputs").empty();
+
+        $.each(items, function (i, item) {
+            generateInputRow(i);
+            $("#inputs-copy").append(`<div class="form-group">
+                    <div class="row">
+                        <div class="col-4">
+                            ${item.subjectName}
+                        </div>
+                        <div class="col-4">
+                            ${item.quatityOfHours}
+                        </div>
+                    </div>
+                </div>`);
+
+            setSubjects(i, allSubj);
+            setSubject(item.subjectId, item.subjectName, i);
+            setHours(i, item.quatityOfHours);
+        });
+
+        function setSubjects(i, subjects) {
+            $(`#subject-dropdown-${i}`).empty();
+            var subjDropdownItems =
+                `                   <li role="presentation" class="search-box">
+                                        <input type="text" class="form-control" placeholder="Начните вводить..." value="" name="search" onkeyup="searchbox($('#subject-dropdown-${i}'))">
+                                    </li>`;
+
+            $.each(subjects,
+                function (subj_i, subj) {
+                    subjDropdownItems += `<li role="presentation" class="dropdown-item" onclick="setSubject(${subj.id}, '${subj.name}', ${i})">${subj.name}</li>`;
+                });
+
+            $(`#subject-dropdown-${i}`).append(subjDropdownItems);
+        }
+
+        function setHours(id, hour) {
+            $(`#Input_${id}__QuatityOfHours`).val(hour);
+        }
+
+        function generateInputRow(i) {
+            $("#inputs").append(
+                `<div class="form-group">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="dropdown d-flex">
+                                <button type="button" class="btn btn-secondary dropdown-toggle w-100" id="subject-select-button-${i}" data-toggle="dropdown" aria-expanded="false">
+                                    Выбрать
+                                    <span class="caret"></span>
+                                </button>
+                                <input type="hidden" id="subjId-${i}" data-val="true" data-val-required="The Id field is required." name="Input[${i}].SubjectId.Id" value="">
+                                <ul class="dropdown-menu bullet dropdown-menu-right dropdown-search-box" aria-labelledby="select" role="menu" id="subject-dropdown-${i}">
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-4 offset-1">
+                            <input value="0" class="form-control" type="number" data-val="true" data-val-required="The QuatityOfHours field is required." id="Input_${i}__QuatityOfHours" name="Input[${i}].QuatityOfHours">
+                            <span class="text-danger field-validation-valid" data-valmsg-for="Input[${i}].QuatityOfHours" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="col-2">
+                            <input type="submit" value="Удалить" class="btn btn-primary" onclick="hndlr_delete(${i})">
+                        </div>
+                    </div>
+                </div>`
+                );
+            }
+        };
 </script>

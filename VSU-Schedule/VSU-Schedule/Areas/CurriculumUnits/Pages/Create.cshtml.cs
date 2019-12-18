@@ -28,44 +28,69 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
 
         public class SubjectInput
         {
-            public int SubjectId { get; set; }
+            public Subject SubjectId { get; set; }
             public int QuatityOfHours { get; set; }
         }
         public IActionResult OnGet()
         {
+            Input = new List<SubjectInput>() { new SubjectInput(), new SubjectInput() };
             Subjects = _context.Subjects.ToList();
             ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
             //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
             return Page();
         }
 
-        public async Task<IActionResult> OnPostCopyCurriculum()
+        public async Task<JsonResult> OnPostCopyCurriculum()
         {
             var curriculumUnit = _context.CurriculumUnits
-                .Include(c => c.Specialization)
                 .Include(c => c.CurriculumSubjects)
                 .ThenInclude(cs => cs.Subject)
-                .FirstOrDefault(m => m.SemesterNumber == SpecInput.SemesterNumber && m.SpecializationId == SpecInput.SpecId);
+                .FirstOrDefault(m =>
+                    m.SemesterNumber == SpecInput.SemesterNumber && m.SpecializationId == SpecInput.SpecId);
 
-            Input = new List<SubjectInput>();
+            var subjects = new List<object>();
             foreach (var elem in curriculumUnit.CurriculumSubjects)
             {
-                Input.Add(new SubjectInput { QuatityOfHours = elem.QuantityAll, SubjectId = elem.SubjectId });
+                subjects.Add(new { quatityOfHours = elem.QuantityAll, subjectId = elem.Subject.Id, subjectName = elem.Subject.Name });
+                //Input.Add(new SubjectInput {QuatityOfHours = elem.QuantityAll, SubjectId = elem.Subject});
             }
 
-            return Partial("_CopyModalPartial", this);
+            var result = new {allSubjects = _context.Subjects.Select(s => new {s.Id, s.Name}), subjects = subjects};
+            ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
+            return new JsonResult(result);
         }
 
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
-        [BindProperty] public List<SubjectInput> Input { get; set; } = new List<SubjectInput>() { new SubjectInput(), new SubjectInput() };
+        [BindProperty] public List<SubjectInput> Input { get; set; } 
         [BindProperty] public int InputId { get; set; }
         [BindProperty] public CopySpecInput SpecInput { get; set; }
 
         public async Task<IActionResult> OnPostDeleteInput()
         {
             Input.Remove(Input[InputId]);
+            Subjects = _context.Subjects.ToList();
+            return Partial("_CreateModalPartial", this);
+        }
+
+        public async Task<IActionResult> OnPostUpdateAsync()
+        {
+            if (SpecInput.SemesterNumber > 0)
+            {
+                Input = new List<SubjectInput>();
+                var curriculumUnit = _context.CurriculumUnits
+                    .Include(c => c.Specialization)
+                    .Include(c => c.CurriculumSubjects)
+                    .ThenInclude(cs => cs.Subject)
+                    .FirstOrDefault(m =>
+                        m.SemesterNumber == SpecInput.SemesterNumber && m.SpecializationId == SpecInput.SpecId);
+                foreach (var elem in curriculumUnit.CurriculumSubjects)
+                {
+                    Input.Add(new SubjectInput { QuatityOfHours = elem.QuantityAll, SubjectId = elem.Subject });
+                }
+            }
+
             Subjects = _context.Subjects.ToList();
             return Partial("_CreateModalPartial", this);
         }
@@ -82,9 +107,9 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
             List<CurriculumSubject> curSubjts = new List<CurriculumSubject>();
             foreach (var elem in Input)
             {
-                if (elem.SubjectId != 0 && elem.QuatityOfHours != 0)
+                if (elem.SubjectId?.Id != 0 && elem.QuatityOfHours != 0)
                 {
-                    curSubjts.Add(new CurriculumSubject {CurriculumId = CurriculumUnit.Id, SubjectId = elem.SubjectId, QuantityAll = elem.QuatityOfHours });
+                    curSubjts.Add(new CurriculumSubject {CurriculumId = CurriculumUnit.Id, SubjectId = elem.SubjectId.Id, QuantityAll = elem.QuatityOfHours });
                 }
             }
             _context.CurriculumSubjects.AddRange(curSubjts);
@@ -95,8 +120,9 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
 
         public IActionResult OnPostAddInput()
         {
-            Input.Add(new SubjectInput());
             Subjects = _context.Subjects.ToList();
+            Input.ForEach(i => i.SubjectId.Name = Subjects.FirstOrDefault(s => s.Id == i.SubjectId.Id)?.Name);
+            Input.Add(new SubjectInput());
             return Partial("_CreateModalPartial", this);
         }
     }

@@ -25,7 +25,7 @@
                 @*<span asp-validation-for="CurriculumUnit.Specialization" class="text-danger"></span>*@
             </div>
             <div class="col-3 offset-2">
-                <input asp-for="SpecInput.SemesterNumber" class="form-control" value="1" />
+                <input asp-for="SpecInput.SemesterNumber" class="form-control" />
             </div>
         </div>
     </div>
@@ -36,33 +36,13 @@
             </div>
         </div>
     </div>
-    @if(Model.Input.Count == 2 && Model.Input[0].SubjectId == Model.Input[1].SubjectId)
-    {
+    <div id="inputs-copy">
 
-    }
-    else
-    {
-        <div id="inputs">
-            @foreach(var inp in Model.Input)
-            {
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-4">
-                            @Html.DisplayFor(m => inp.SubjectId)
-                        </div>
-                        <div class="col-4">
-                            @Html.DisplayFor(m => inp.QuatityOfHours)
-                        </div>
-                    </div>
-                </div>
-            }
         </div>
-    }
-
 </div>
 
 <div class="modal-footer">
     <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <input type="button" data-dismiss="modal" class="btn btn-primary" value="Ок" />
+    <input type="button" data-dismiss="modal" class="btn btn-primary" value="Ок"/>
 </div>
 
