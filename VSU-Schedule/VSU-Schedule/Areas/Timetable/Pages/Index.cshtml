@@ -8,8 +8,9 @@
     bool activeSemesterPage = true;
 }
 <form method="post">
-    <input type="submit" value="Excel" class="btn btn-outline-primary" asp-page-handler="CreateExcel" >
+    <input type="submit" value="Выгрузить в Excel" class="btn btn-success" asp-page-handler="CreateExcel" >
 </form>
+<br/>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
     {

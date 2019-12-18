@@ -9,6 +9,9 @@
 <h1>Добавить</h1>
 
 <h4>Учебный план</h4>
+<div class="form-group">
+    <button type="button" class="btn btn-outline-primary w-100" data-toggle="modal" data-target="#copyModal">Создать из существующего учебного плана</button>
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -27,9 +30,7 @@
             <div class="form-group">
                 <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#exampleModal">Предметы</button>
             </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#copyModal">Копировать предметы</button>
-            </div>
+            
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" onclick="hndlr_clear()" />
             </div>
@@ -88,34 +89,32 @@
 }
 
 <script>
-    $('#exampleModal').on('show.bs.modal',
-        function (event) {
-            var button = $(event.relatedTarget);
-            //setSubject(button.data("subject-name"), button.data("subject-id"));
-        });
-
     function setSubject(subjectId, subjectName, i) {
         $(`#subject-select-button-${i}`).html(subjectName);
         $(`#subjId-${i}`).val(subjectId);
     }
 
     function hndlr_copyInputs() {
-        $("form").attr("data-ajax", "true");
-        $("form").attr("data-ajax-url", "?handler=CopyCurriculum");
+        $("#form").attr("data-ajax-complete", "copy_completed");
+        $("#form").attr("data-ajax", "true");
+        $("#form").attr("data-ajax-url", "?handler=CopyCurriculum");
     }
 
     function hndlr() {
+        $("#form").attr("data-ajax-complete", "completed");
         $("#form").attr("data-ajax", "true");
         $("#form").attr("data-ajax-url", "?handler=AddInput");
     }
 
     function hndlr_delete(i) {
+        $("#form").attr("data-ajax-complete", "completed");
         $("#form").attr("data-ajax", "true");
         $("#form").attr("data-ajax-url", "?handler=DeleteInput");
         $('#InputId').val(i);
     }
 
     function hndlr_clear() {
+        $("#form").attr("data-ajax-complete", "completed");
         $("#form").attr("data-ajax", "false");
         $("#form").attr("data-ajax-url", "?handler=");
     }
@@ -140,5 +139,12 @@
     completed = function (xhr) {
         data = xhr.responseText;
         $("#modal-form").html(data);
+    };
+
+
+    copy_completed = function (xhr) {
+        alert("copy");
+        data = xhr.responseText;
+        $("#copy-modal-form").html(data);
     };
 </script>

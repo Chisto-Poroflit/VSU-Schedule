@@ -34,7 +34,6 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
         public IActionResult OnGet()
         {
             Subjects = _context.Subjects.ToList();
-            Input = new List<SubjectInput>() { new SubjectInput(), new SubjectInput() };
             ViewData["SpecializationId"] = new SelectList(_context.Specializations, "Id", "Name");
             //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
             return Page();
@@ -54,13 +53,13 @@ namespace VSU_Schedule.Areas.CurriculumUnits.Pages
                 Input.Add(new SubjectInput { QuatityOfHours = elem.QuantityAll, SubjectId = elem.SubjectId });
             }
 
-            return Partial("_CopyModalPartial",this);
+            return Partial("_CopyModalPartial", this);
         }
 
         [BindProperty]
         public CurriculumUnit CurriculumUnit { get; set; }
         public List<Subject> Subjects { get; set; }
-        [BindProperty] public List<SubjectInput> Input { get; set; }
+        [BindProperty] public List<SubjectInput> Input { get; set; } = new List<SubjectInput>() { new SubjectInput(), new SubjectInput() };
         [BindProperty] public int InputId { get; set; }
         [BindProperty] public CopySpecInput SpecInput { get; set; }
 

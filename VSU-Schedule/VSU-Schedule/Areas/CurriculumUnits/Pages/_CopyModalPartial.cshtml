@@ -3,15 +3,15 @@
 <div class="modal-body">
     <div class="form-group">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
                 <label for="message-text" class="col-form-label">
-                    <h3>Специализация</h3>
+                    <h3>Специальность</h3>
                 </label>
             </div>
-            <div class="col-2"></div>
-            <div class="col-4">
+            
+            <div class="col-3 offset-2" >
                 <label for="message-text" class="col-form-label">
-                    <h3>Номер семестра</h3>
+                    <h3>Семестр</h3>
                 </label>
             </div>
         </div>
@@ -19,13 +19,12 @@
 
     <div class="form-group">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
                 @*<label asp-for="CurriculumUnit.Specialization" class="control-label"></label>*@
                 <select asp-for="SpecInput.SpecId" class="form-control" asp-items="ViewBag.SpecializationId"></select>
                 @*<span asp-validation-for="CurriculumUnit.Specialization" class="text-danger"></span>*@
             </div>
-            <div class="col-2"></div>
-            <div class="col-4">
+            <div class="col-3 offset-2">
                 <input asp-for="SpecInput.SemesterNumber" class="form-control" value="1" />
             </div>
         </div>
@@ -49,10 +48,10 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-4">
-                            @Html.DisplayFor(m => inp.SubjectId);
+                            @Html.DisplayFor(m => inp.SubjectId)
                         </div>
                         <div class="col-4">
-                            @Html.DisplayFor(m => inp.QuatityOfHours);
+                            @Html.DisplayFor(m => inp.QuatityOfHours)
                         </div>
                     </div>
                 </div>
