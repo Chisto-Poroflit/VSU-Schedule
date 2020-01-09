@@ -34,7 +34,7 @@ namespace VSU_Schedule.Areas.Identity.Pages.Account
             [BindProperty]
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Recovery Code")]
+            [Display(Name = "Резервный код")]
             public string RecoveryCode { get; set; }
         }
 

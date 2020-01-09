@@ -1,0 +1,109 @@
+﻿@page
+@using System.Globalization
+@model VSU_Schedule.Areas.MainSchedule.Pages.IndexModel
+@{
+    ViewData["Title"] = "Index";
+    var rowSpan = Model.Para.Count * 2 + 1;
+    bool activeSemesterTab = true;
+    bool activeSemesterPage = true;
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterTab ? "active" : "";
+
+        <li class="nav-item">
+            <a class="nav-link @active" id="@semGroups.Key-tab" data-toggle="tab" href="#sem-@semGroups.Key" role="tab" aria-controls="@semGroups.Key" aria-selected="@activeSemesterTab">@semGroups.Key семестр</a>
+        </li>
+        activeSemesterTab = false;
+    }
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    @foreach (var semGroups in Model.Groups.GroupBy(g => g.SemesterNumber))
+    {
+        var active = activeSemesterPage ? "show active" : "";
+        activeSemesterPage = false;
+        <div class="tab-pane fade @active" id="sem-@semGroups.Key" role="tabpanel" aria-labelledby="@semGroups.Key-tab">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="2" rowspan="2"></th>
+                        @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).GroupBy(g => g.GroupNumber))
+                        {
+                            var subgroupsCount = group.Count();
+
+                            <th scope="col" colspan="@subgroupsCount" class="text-center">Группа @group.Key</th>
+                        }
+                    </tr>
+                    <tr>
+
+                        @foreach (var group in semGroups.OrderBy(g => g.GroupNumber).ThenBy(g => g.SubgroupNumber))
+                        {
+                            <th scope="col" class="text-center">@group.SubgroupNumber</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int day = 1; day <= 6; day++)
+                    {
+                        <tr>
+                            <td rowspan="@rowSpan">@CultureInfo.CurrentCulture.DateTimeFormat.DayNames[day]</td>
+                        </tr>
+
+                        @foreach (var para in Model.Para)
+                        {
+                            for (int numdenum = 0; numdenum < 2; numdenum++)
+                            {
+                                <tr>
+                                    @if (numdenum == 0)
+                                    {
+                                        <td rowspan="2">@para.StartTime - @para.EndTime</td>
+                                    }
+                                    @foreach (var group in semGroups)
+                                    {
+                                        if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator && g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day &&
+                                                                                           g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
+                                            <td rowspan="2" class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
+                                        }
+                                        else if (numdenum == 0 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator && !g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day && g.Numerator &&
+                                                                                           g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
+                                            <td class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
+                                        }
+                                        else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && !g.Numerator && g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        {
+                                            var couple = Model.Couples.FirstOrDefault(g => g.ParaId == para.Number && g.Day == day && g.Denomirator &&
+                                                                                           g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == @group.Id));
+                                            <td class="text-center"><h5>@couple.Subject.Name</h5>@couple.Teacher.FullName @couple.RoomId</td>
+                                        }
+                                        else if (numdenum == 1 && @Model.Couples.Any(g => g.ParaId == para.Number && g.Day == day && g.Numerator && g.Denomirator &&
+                                                                g.CoupleGroups.Any(s => s.CoupleId == g.Id && s.GroupId == group.Id)))
+                                        { }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+
+                    }
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

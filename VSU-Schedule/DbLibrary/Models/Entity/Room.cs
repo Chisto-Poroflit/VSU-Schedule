@@ -1,29 +1,25 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DbLibrary.Models.Entity
 {
     public class Room
     {
-        [Display(Name ="Номер")]
-        public string Number { get; set; }
-
+        [Display(Name = "Номер")] public string Number { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Вместимость является целым положительным числом")]
-        [Display(Name ="Вместимость")]
+        [Display(Name = "Вместимость")]
         public int Capacity { get; set; }
 
-        [Display(Name = "Лекционная")]
-        public bool IsLecture { get; set; }
+        [Display(Name = "Лекционная")] public bool IsLecture { get; set; }
 
-        [Display(Name = "Практическая")]
-        public bool IsPractice { get; set; }
+        [Display(Name = "Практическая")] public bool IsPractice { get; set; }
 
-        [Display(Name = "Лаборатория")]
-        public bool IsLaboratory { get; set; }
+        [Display(Name = "Лаборатория")] public bool IsLaboratory { get; set; }
 
-        [Display(Name = "Специальная")]
-        public bool IsSpecial { get; set; }
+        [Display(Name = "Специальная")] public bool IsSpecial { get; set; }
 
         public List<Couple> Couples { get; set; }
     }

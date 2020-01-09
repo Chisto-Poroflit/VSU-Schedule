@@ -19,6 +19,6 @@ namespace DbLibrary.Models.Entity
 
         public List<Group> Group { get; set; }
 
-        public CurriculumUnit CurriculumUnit { get; set; }
+        public List<CurriculumUnit> CurriculumUnits { get; set; }
     }
 }

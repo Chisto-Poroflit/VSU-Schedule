@@ -6,6 +6,7 @@ namespace DbLibrary.Models.Entity
     {
         public int Id { get; set; }
 
+        public int SemesterNumber { get; set; }
         public string RoomId { get; set; }
         public Room Room { get; set; }
 

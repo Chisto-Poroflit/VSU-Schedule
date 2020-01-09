@@ -1,0 +1,65 @@
+﻿@page
+@using VSU_Schedule.Areas.CurriculumUnits.Pages
+@model VSU_Schedule.Areas.CurriculumUnits.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Учебный план";
+}
+
+<h1>Учебный план</h1>
+
+<p>
+    <a asp-page="Create">Добавить учебный план</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnits[0].SemesterNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnits[0].Specialization)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurriculumUnits[0].CurriculumSubjects)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CurriculumUnits)
+        {
+        <tr>
+            @Html.Partial("_IndexModalPartial", new _IndexModalPartialModel(item))
+            <td>
+                @Html.DisplayFor(modelItem => item.SemesterNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Specialization.Name)
+            </td>
+            <td>
+                <button type="button" class="btn btn-secondary w-100 h-100" data-toggle="modal" data-target="#Modal-@item.Id">Предметы</button>
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a> |
+                @*<a asp-page="./Details" asp-route-id="@item.Id">Подробнее</a> |*@
+                <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+            
+        }
+    </tbody>
+</table>
+
+
+
+<script>
+    $('#exampleModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            //setSubject(button.data("subject-name"), button.data("subject-id"));
+        });
+    @*function setCurriculumUnitId(curriculumId) {
+        @curriculumUnitId = curriculumId;
+                }*@
+</script>

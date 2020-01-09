@@ -9,19 +9,18 @@ namespace DbLibrary.Models.EntityConfig
         public void Configure(EntityTypeBuilder<Couple> builder)
         {
             builder.HasKey(c => c.Id);
+            //builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.RoomId, c.Denomirator, c.Numerator });
+            //builder.HasAlternateKey(c => new { c.Day, c.ParaId, c.TeacherId, c.Numerator, c.Denomirator, c.CoupleGroups });
             builder.Property(c => c.Id)
                 .ValueGeneratedOnAdd();
             builder.Property(c => c.Day)
                 .IsRequired();
-            //    .HasComputedColumnSql("CHECK(Day >= 0 AND Day <= 6)");
             builder.Property(c => c.LessonType)
                 .IsRequired();
-            //    .HasComputedColumnSql("CHECK(LessonType >= 0 AND LessonType <= 2)");
             builder.Property(c => c.Numerator)
                 .IsRequired();
             builder.Property(c => c.Denomirator)
                 .IsRequired();
-              //  .HasComputedColumnSql("CHECK((Numerator = 0 AND Denomirator = 1) OR (Numerator = 1 AND Denomirator = 0) OR (Numerator = 1 AND Denomirator = 1))");
             builder.HasOne(c => c.Para)
                 .WithMany(dt => dt.Couples)
                 .HasForeignKey(c => c.ParaId);

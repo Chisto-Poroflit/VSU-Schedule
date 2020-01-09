@@ -1,0 +1,33 @@
+﻿@page
+@model VSU_Schedule.Areas.CurriculumUnits.Pages.DeleteModel
+
+@{
+    ViewData["Title"] = "Удаление учебного плана";
+}
+
+<h1>Удалить</h1>
+
+<h3>Вы уверены, что хотите удалить этот учебный план?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurriculumUnit.SemesterNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurriculumUnit.SemesterNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurriculumUnit.Specialization)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurriculumUnit.Specialization.Name)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="CurriculumUnit.Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-page="./Index">Назад к спсику</a>
+    </form>
+</div>

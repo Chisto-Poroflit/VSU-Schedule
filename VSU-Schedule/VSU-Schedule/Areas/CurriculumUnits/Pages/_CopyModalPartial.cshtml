@@ -1,0 +1,48 @@
+﻿@model VSU_Schedule.Areas.CurriculumUnits.Pages.CreateModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="message-text" class="col-form-label">
+                    <h3>Специальность</h3>
+                </label>
+            </div>
+            
+            <div class="col-3 offset-2" >
+                <label for="message-text" class="col-form-label">
+                    <h3>Семестр</h3>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                @*<label asp-for="CurriculumUnit.Specialization" class="control-label"></label>*@
+                <select asp-for="SpecInput.SpecId" class="form-control" asp-items="ViewBag.SpecializationId"></select>
+                @*<span asp-validation-for="CurriculumUnit.Specialization" class="text-danger"></span>*@
+            </div>
+            <div class="col-3 offset-2">
+                <input asp-for="SpecInput.SemesterNumber" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-4">
+                <input type="submit" id="submitCopyInputs" class="btn btn-primary" onclick="hndlr_copyInputs()" value="Показать предметы" />
+            </div>
+        </div>
+    </div>
+    <div id="inputs-copy">
+
+        </div>
+</div>
+
+<div class="modal-footer">
+    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <input type="button" data-dismiss="modal" class="btn btn-primary" value="Ок"/>
+</div>
+

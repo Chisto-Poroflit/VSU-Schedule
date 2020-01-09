@@ -17,6 +17,9 @@ namespace DbLibrary.Models.EntityConfig
             builder.HasOne(g => g.Specialization)
                 .WithMany(s => s.Group)
                 .HasForeignKey(g => g.SpecializatioId);
+            //builder.HasOne(g => g.CurriculumUnit)
+            //    .WithMany(cu => cu.Groups)
+            //    .HasForeignKey(g => g.CurriculumUnit);
         }
     }
 }
