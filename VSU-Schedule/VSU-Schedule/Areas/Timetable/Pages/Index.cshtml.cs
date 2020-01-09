@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VSU_Schedule.Areas.Timetable.Pages
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private ApplicationContext _context;
