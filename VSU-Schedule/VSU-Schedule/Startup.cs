@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,8 +36,8 @@ namespace VSU_Schedule
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+            services.AddRazorPages();
+
 
         }
 
@@ -60,14 +59,16 @@ namespace VSU_Schedule
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             //app.UseCookiePolicy();
+            app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
             app.Use(async (context, next) =>
             {
                 context.Response.Headers.Add("X-Frame-Options", "ALLOWALL");
                 await next();
             });
-            app.UseMvc();
+            app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
         }
 
         

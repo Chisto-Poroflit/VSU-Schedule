@@ -23,7 +23,6 @@ namespace VSU_Schedule.Areas.Identity
 
                 services.AddDefaultIdentity<VSU_ScheduleUser>()
                     .AddRoles<IdentityRole>()
-                    .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<VSU_ScheduleUserContext>();
                 
             });
